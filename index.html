@@ -3,480 +3,676 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>ときねねstudy room</title>
+<title>ときねね study room ver1.03</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --pink-1:#ffe4ee;
-    --pink-2:#ffc7de;
-    --pink-3:#ff9fc7;
-    --pink-deep:#ff6fa8;
-    --lavender:#e3d9ff;
-    --mint:#d4f5e6;
-    --cream:#fff8f3;
-    --ink:#5a4a52;
-    --ink-soft:#9b8893;
-    --white-glass: rgba(255,255,255,0.55);
-    --white-glass-strong: rgba(255,255,255,0.78);
-  }
-  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-  html,body{margin:0; padding:0;}
-  body{
-    font-family:'M PLUS Rounded 1c','Noto Sans JP',sans-serif;
-    color:var(--ink);
-    background: radial-gradient(circle at 20% 0%, var(--pink-1), transparent 55%),
-                radial-gradient(circle at 90% 10%, var(--lavender), transparent 50%),
-                radial-gradient(circle at 50% 100%, var(--mint), transparent 45%),
-                var(--cream);
-    min-height:100vh;
-    overflow-x:hidden;
-  }
-  a{color:inherit; text-decoration:none;}
-  button{font-family:inherit;}
+:root{
+  --pink-1:#ffe4ee;
+  --pink-2:#ffc3dd;
+  --pink-3:#ff9fc9;
+  --pink-deep:#ff6fb0;
+  --lav-1:#e8e0ff;
+  --lav-2:#d4c5ff;
+  --sky-1:#dff3ff;
+  --cream:#fffaf7;
+  --text-deep:#6b4a5a;
+  --text-soft:#9a7a8a;
+  --glass-bg:rgba(255,255,255,0.45);
+  --glass-border:rgba(255,255,255,0.7);
+  --shadow-soft:0 8px 24px rgba(255,150,190,0.25);
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{
+  font-family:'Zen Maru Gothic','Quicksand',sans-serif;
+  background:linear-gradient(160deg,var(--pink-1) 0%, var(--lav-1) 45%, var(--sky-1) 100%);
+  color:var(--text-deep);
+  overflow-x:hidden;
+  -webkit-tap-highlight-color:transparent;
+}
+body{
+  min-height:100vh;
+  padding-bottom:92px;
+  position:relative;
+}
+/* floating decorative blobs */
+.bg-blob{
+  position:fixed;
+  border-radius:50%;
+  filter:blur(40px);
+  opacity:0.5;
+  z-index:0;
+  pointer-events:none;
+}
+.bg-blob.b1{width:220px;height:220px;background:var(--pink-2);top:-60px;left:-60px;}
+.bg-blob.b2{width:260px;height:260px;background:var(--lav-2);bottom:80px;right:-80px;}
+.bg-blob.b3{width:160px;height:160px;background:var(--sky-1);top:40%;left:60%;}
 
-  /* ---------- Loader ---------- */
-  #loader{
-    position:fixed; inset:0; z-index:9999;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    background:linear-gradient(160deg,#fff0f6,#ffe6f0 50%,#f3e8ff);
-    transition:opacity .6s ease, visibility .6s ease;
-  }
-  #loader.hide{opacity:0; visibility:hidden;}
-  .heart-wrap{width:120px; height:120px; position:relative;}
-  .heart-svg{width:100%; height:100%; overflow:visible;}
-  .heart-path{
-    fill:none;
-    stroke:var(--pink-deep);
-    stroke-width:6;
-    stroke-linecap:round;
-    stroke-linejoin:round;
-    stroke-dasharray:340;
-    stroke-dashoffset:340;
-    animation:draw 1.6s ease forwards, pulse 1.2s ease-in-out 1.6s infinite;
-  }
-  .heart-fill{
-    fill:var(--pink-3);
-    opacity:0;
-    animation:fillin .5s ease forwards .15s;
-    animation-delay:1.4s;
-  }
-  @keyframes draw{ to{ stroke-dashoffset:0; } }
-  @keyframes fillin{ to{ opacity:1; } }
-  @keyframes pulse{ 0%,100%{ transform:scale(1);} 50%{ transform:scale(1.06);} }
-  .loader-text{
-    margin-top:22px; font-size:14px; letter-spacing:.08em; color:var(--ink-soft); font-weight:700;
-  }
-  .loader-dots span{animation:blink 1.4s infinite; opacity:0;}
-  .loader-dots span:nth-child(1){animation-delay:0s;}
-  .loader-dots span:nth-child(2){animation-delay:.2s;}
-  .loader-dots span:nth-child(3){animation-delay:.4s;}
-  @keyframes blink{ 0%,80%,100%{opacity:0;} 40%{opacity:1;} }
+/* ====== LOADER ====== */
+#loader{
+  position:fixed; inset:0;
+  background:linear-gradient(160deg,var(--pink-1),var(--lav-1));
+  z-index:9999;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  transition:opacity 0.6s ease, visibility 0.6s ease;
+}
+#loader.hide{opacity:0; visibility:hidden;}
+.loader-heart{width:90px;height:90px;}
+.loader-heart path{
+  fill:none;
+  stroke:var(--pink-deep);
+  stroke-width:6;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  stroke-dasharray:340;
+  stroke-dashoffset:340;
+  animation:drawHeart 1.4s ease forwards, fillPulse 1.4s ease forwards;
+}
+@keyframes drawHeart{ to{stroke-dashoffset:0;} }
+@keyframes fillPulse{
+  0%,70%{fill:transparent;}
+  100%{fill:var(--pink-3);}
+}
+.loader-text{
+  margin-top:18px;
+  font-size:13px;
+  letter-spacing:0.15em;
+  color:var(--text-soft);
+  font-weight:600;
+}
 
-  @media (prefers-reduced-motion: reduce){
-    .heart-path,.heart-fill,.loader-dots span{animation:none !important;}
-    .heart-path{stroke-dashoffset:0;}
-    .heart-fill{opacity:1;}
-  }
+/* ====== HEADER ====== */
+.app-header{
+  position:relative;
+  z-index:1;
+  padding:26px 20px 14px;
+  text-align:center;
+}
+.brand-tag{
+  display:inline-block;
+  font-size:11px;
+  letter-spacing:0.12em;
+  color:var(--text-soft);
+  background:var(--glass-bg);
+  border:1px solid var(--glass-border);
+  border-radius:20px;
+  padding:4px 14px;
+  backdrop-filter:blur(10px);
+  margin-bottom:10px;
+}
+.app-title{
+  font-size:24px;
+  font-weight:900;
+  color:var(--text-deep);
+  letter-spacing:0.02em;
+}
+.app-title span{color:var(--pink-deep);}
+.app-sub{
+  font-size:11.5px;
+  color:var(--text-soft);
+  margin-top:4px;
+  font-weight:500;
+}
 
-  /* ---------- App shell ---------- */
-  #app{display:none; max-width:520px; margin:0 auto; padding-bottom:96px; min-height:100vh; position:relative;}
-  #app.show{display:block;}
+/* ====== PAGE CONTAINER ====== */
+.page{
+  display:none;
+  position:relative;
+  z-index:1;
+  padding:6px 16px 30px;
+  animation:fadeIn 0.4s ease;
+}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
 
-  header.topbar{
-    padding:22px 20px 14px;
-    display:flex; align-items:center; gap:12px;
-  }
-  .logo-heart{width:34px; height:34px; flex-shrink:0;}
-  .brand-text h1{
-    font-size:18px; margin:0; font-weight:800; color:var(--pink-deep); letter-spacing:.02em;
-  }
-  .brand-text p{margin:1px 0 0; font-size:10.5px; color:var(--ink-soft); letter-spacing:.05em;}
+.card{
+  background:var(--glass-bg);
+  border:1px solid var(--glass-border);
+  border-radius:22px;
+  padding:18px;
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  box-shadow:var(--shadow-soft);
+  margin-bottom:16px;
+}
+.card-title{
+  font-size:14px;
+  font-weight:700;
+  color:var(--text-deep);
+  margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.card-title .dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--pink-deep);
+  display:inline-block;
+}
 
-  .page{padding:6px 18px 18px; display:none;}
-  .page.active{display:block; animation:fadein .35s ease;}
-  @keyframes fadein{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+/* ===== HOME PAGE ===== */
+.hero-card{
+  background:linear-gradient(135deg, var(--pink-2), var(--lav-2));
+  border:1px solid rgba(255,255,255,0.8);
+  border-radius:26px;
+  padding:22px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:var(--shadow-soft);
+}
+.hero-card::after{
+  content:'';
+  position:absolute;
+  width:140px;height:140px;
+  background:rgba(255,255,255,0.35);
+  border-radius:50%;
+  top:-50px; right:-50px;
+}
+.hero-greet{font-size:12px; color:rgba(107,74,90,0.8); font-weight:600;}
+.hero-name{font-size:21px; font-weight:900; margin-top:4px;}
+.hero-quote{
+  font-size:11.5px;
+  margin-top:10px;
+  background:rgba(255,255,255,0.5);
+  border-radius:14px;
+  padding:8px 12px;
+  font-weight:500;
+  line-height:1.5;
+}
 
-  .section-title{
-    font-size:13px; font-weight:700; color:var(--pink-deep);
-    margin:22px 4px 10px; display:flex; align-items:center; gap:6px; letter-spacing:.03em;
-  }
-  .section-title .dot{width:6px; height:6px; border-radius:50%; background:var(--pink-deep);}
+.quick-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:14px;
+}
+.quick-item{
+  background:var(--glass-bg);
+  border:1px solid var(--glass-border);
+  border-radius:18px;
+  padding:14px 12px;
+  text-align:center;
+  backdrop-filter:blur(12px);
+  cursor:pointer;
+  transition:transform 0.15s ease;
+}
+.quick-item:active{transform:scale(0.96);}
+.quick-icon{width:30px;height:30px;margin:0 auto 6px;}
+.quick-label{font-size:12px;font-weight:700;color:var(--text-deep);}
+.quick-sub{font-size:9.5px;color:var(--text-soft);margin-top:2px;}
 
-  .card{
-    background:var(--white-glass-strong);
-    border:1px solid rgba(255,255,255,0.8);
-    border-radius:22px;
-    padding:18px;
-    backdrop-filter:blur(14px);
-    -webkit-backdrop-filter:blur(14px);
-    box-shadow:0 8px 24px -10px rgba(255,150,190,0.35);
-    margin-bottom:14px;
-  }
+.link-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:rgba(255,255,255,0.55);
+  border-radius:16px;
+  padding:13px 14px;
+  margin-bottom:8px;
+  text-decoration:none;
+  color:var(--text-deep);
+}
+.link-row:last-child{margin-bottom:0;}
+.link-left{display:flex; align-items:center; gap:10px;}
+.link-icon{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.link-icon svg{width:18px;height:18px;}
+.link-text-title{font-size:13px;font-weight:700;}
+.link-text-sub{font-size:10px;color:var(--text-soft);margin-top:1px;}
+.link-arrow{font-size:14px;color:var(--pink-deep);}
 
-  .hero-card{
-    background:linear-gradient(135deg, rgba(255,210,230,0.85), rgba(225,210,255,0.7));
-    border-radius:26px;
-    padding:22px 20px;
-    position:relative;
-    overflow:hidden;
-    margin-bottom:18px;
-    border:1px solid rgba(255,255,255,0.9);
-  }
-  .hero-card::after{
-    content:'';
-    position:absolute; right:-30px; top:-30px; width:140px; height:140px;
-    background:radial-gradient(circle, rgba(255,255,255,0.7), transparent 70%);
-  }
-  .hero-card h2{margin:0 0 6px; font-size:19px; font-weight:800; color:#a3486b;}
-  .hero-card p{margin:0; font-size:12.5px; color:#8a6373; line-height:1.6;}
+/* timer (signature AI element) */
+.timer-card{
+  background:linear-gradient(135deg, rgba(255,255,255,0.6), rgba(255,225,240,0.5));
+}
+.timer-ring-wrap{
+  display:flex; align-items:center; justify-content:center;
+  margin:8px 0 12px;
+  position:relative;
+}
+.timer-ring{width:150px;height:150px;}
+.timer-ring circle{fill:none; stroke-linecap:round;}
+.timer-bg{stroke:rgba(255,150,190,0.18); stroke-width:10;}
+.timer-fg{stroke:var(--pink-deep); stroke-width:10; transition:stroke-dashoffset 1s linear;}
+.timer-center{
+  position:absolute; inset:0;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+}
+.timer-time{font-size:26px; font-weight:900; color:var(--text-deep); letter-spacing:0.02em;}
+.timer-mode{font-size:10px; color:var(--text-soft); margin-top:2px; font-weight:600;}
+.timer-controls{display:flex; gap:10px; justify-content:center;}
+.timer-btn{
+  border:none;
+  background:var(--pink-deep);
+  color:#fff;
+  font-family:inherit;
+  font-weight:700;
+  font-size:12px;
+  padding:9px 20px;
+  border-radius:14px;
+  cursor:pointer;
+}
+.timer-btn.secondary{
+  background:rgba(255,255,255,0.6);
+  color:var(--text-deep);
+}
+.timer-btn:active{transform:scale(0.95);}
 
-  .link-row{
-    display:flex; align-items:center; gap:14px;
-    padding:14px 4px;
-    border-bottom:1px solid rgba(255,170,200,0.25);
-  }
-  .link-row:last-child{border-bottom:none;}
-  .link-icon{
-    width:42px; height:42px; border-radius:14px; flex-shrink:0;
-    display:flex; align-items:center; justify-content:center;
-    background:linear-gradient(135deg, var(--pink-2), var(--pink-1));
-  }
-  .link-icon svg{width:22px; height:22px;}
-  .link-text strong{display:block; font-size:13.5px; font-weight:700; color:var(--ink);}
-  .link-text span{display:block; font-size:11px; color:var(--ink-soft); margin-top:2px;}
-  .link-arrow{margin-left:auto; color:var(--pink-3); font-size:18px;}
+/* feedback */
+.field-label{font-size:11px; font-weight:700; color:var(--text-soft); margin-bottom:5px; display:block;}
+.field-input,.field-textarea{
+  width:100%;
+  border:1px solid rgba(255,150,190,0.35);
+  background:rgba(255,255,255,0.6);
+  border-radius:14px;
+  padding:10px 12px;
+  font-family:inherit;
+  font-size:12.5px;
+  color:var(--text-deep);
+  margin-bottom:12px;
+  resize:none;
+}
+.field-textarea{min-height:90px; line-height:1.5;}
+.field-input:focus,.field-textarea:focus{outline:2px solid var(--pink-3);}
+.seg-group{display:flex; gap:8px; margin-bottom:12px;}
+.seg-btn{
+  flex:1;
+  text-align:center;
+  padding:8px 0;
+  border-radius:12px;
+  border:1px solid rgba(255,150,190,0.35);
+  background:rgba(255,255,255,0.4);
+  font-size:11.5px;
+  font-weight:700;
+  color:var(--text-soft);
+  cursor:pointer;
+}
+.seg-btn.active{background:var(--pink-deep); color:#fff; border-color:var(--pink-deep);}
+.submit-btn{
+  width:100%;
+  border:none;
+  background:linear-gradient(135deg,var(--pink-deep),var(--pink-3));
+  color:#fff;
+  font-family:inherit;
+  font-weight:700;
+  font-size:13.5px;
+  padding:13px 0;
+  border-radius:16px;
+  cursor:pointer;
+  box-shadow:0 6px 16px rgba(255,111,176,0.35);
+}
+.submit-btn:active{transform:scale(0.98);}
+.feedback-note{font-size:10px; color:var(--text-soft); margin-top:8px; line-height:1.5;}
 
-  /* Pomodoro */
-  .timer-display{
-    font-size:46px; font-weight:800; color:var(--pink-deep); text-align:center;
-    letter-spacing:.02em; margin:6px 0 4px; font-family:'M PLUS Rounded 1c';
-  }
-  .timer-mode{text-align:center; font-size:11.5px; color:var(--ink-soft); margin-bottom:14px; letter-spacing:.06em;}
-  .timer-ring-wrap{display:flex; justify-content:center; margin-bottom:10px;}
-  .timer-btns{display:flex; gap:10px; justify-content:center;}
-  .pill-btn{
-    border:none; border-radius:999px; padding:10px 20px; font-size:12.5px; font-weight:700;
-    background:var(--white-glass); color:var(--pink-deep); cursor:pointer;
-    border:1px solid rgba(255,150,190,0.4);
-    transition:transform .15s ease;
-  }
-  .pill-btn:active{transform:scale(0.95);}
-  .pill-btn.primary{background:linear-gradient(135deg,var(--pink-3),var(--pink-deep)); color:#fff; border:none;}
-  .timer-preset{display:flex; gap:8px; justify-content:center; margin-top:12px;}
-  .preset-chip{
-    font-size:11px; padding:6px 12px; border-radius:999px; background:rgba(255,255,255,0.6);
-    color:var(--ink-soft); border:1px solid rgba(255,170,200,0.4); cursor:pointer;
-  }
-  .preset-chip.active{background:var(--pink-deep); color:#fff; border-color:var(--pink-deep);}
+/* iframe wrap */
+.iframe-wrap{
+  border-radius:18px;
+  overflow:hidden;
+  border:1px solid var(--glass-border);
+  background:#fff;
+}
+.iframe-wrap iframe{display:block; width:100%; border:none;}
 
-  /* embeds */
-  .embed-wrap{
-    border-radius:18px; overflow:hidden; border:1px solid rgba(255,255,255,0.8);
-    background:#fff;
-  }
-  .embed-wrap iframe{width:100%; border:none; display:block;}
+.open-btn{
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  width:100%;
+  border:none;
+  background:rgba(255,255,255,0.6);
+  color:var(--text-deep);
+  font-family:inherit;
+  font-weight:700;
+  font-size:12.5px;
+  padding:12px 0;
+  border-radius:14px;
+  margin-top:10px;
+  cursor:pointer;
+  border:1px solid var(--glass-border);
+}
+.open-btn:active{transform:scale(0.97);}
 
-  .ext-btn{
-    display:block; text-align:center; padding:14px; border-radius:16px;
-    background:linear-gradient(135deg,var(--pink-3),var(--pink-deep));
-    color:#fff; font-weight:700; font-size:13.5px; box-shadow:0 8px 20px -8px rgba(255,111,168,0.6);
-  }
+.empty-note{
+  text-align:center;
+  padding:30px 10px;
+  color:var(--text-soft);
+  font-size:12px;
+}
 
-  /* Feedback */
-  textarea#fbText{
-    width:100%; min-height:90px; border-radius:14px; border:1px solid rgba(255,170,200,0.5);
-    padding:12px 14px; font-size:13px; font-family:inherit; resize:vertical;
-    background:rgba(255,255,255,0.7); color:var(--ink);
-  }
-  textarea#fbText:focus{outline:none; border-color:var(--pink-deep);}
-  select#fbType{
-    width:100%; padding:10px 12px; border-radius:12px; border:1px solid rgba(255,170,200,0.5);
-    font-size:12.5px; margin-bottom:10px; background:rgba(255,255,255,0.7); color:var(--ink);
-    font-family:inherit;
-  }
-  .send-btn{
-    width:100%; margin-top:10px; padding:13px; border:none; border-radius:14px;
-    background:linear-gradient(135deg,var(--pink-3),var(--pink-deep)); color:#fff;
-    font-size:13.5px; font-weight:800; letter-spacing:.03em; cursor:pointer;
-  }
-  .send-btn:active{transform:scale(0.98);}
-  .fb-note{font-size:10.5px; color:var(--ink-soft); margin-top:8px; line-height:1.5;}
+/* ===== BOTTOM NAV (iOS26 glass) ===== */
+.bottom-nav{
+  position:fixed;
+  left:50%;
+  bottom:14px;
+  transform:translateX(-50%);
+  width:min(94%,420px);
+  background:rgba(255,255,255,0.55);
+  border:1px solid rgba(255,255,255,0.8);
+  border-radius:28px;
+  backdrop-filter:blur(22px) saturate(180%);
+  -webkit-backdrop-filter:blur(22px) saturate(180%);
+  box-shadow:0 10px 30px rgba(180,120,160,0.28), inset 0 1px 1px rgba(255,255,255,0.9);
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  padding:8px 6px;
+  z-index:100;
+}
+.nav-item{
+  display:flex; flex-direction:column; align-items:center;
+  gap:3px;
+  flex:1;
+  padding:6px 2px;
+  border-radius:18px;
+  cursor:pointer;
+  transition:background 0.2s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.nav-item svg{width:21px;height:21px; transition:transform 0.2s ease;}
+.nav-item .nav-label{font-size:9.5px; font-weight:700; color:var(--text-soft);}
+.nav-item.active{background:rgba(255,255,255,0.55);}
+.nav-item.active svg{transform:translateY(-1px);}
+.nav-item.active .nav-label,.nav-item.active path,.nav-item.active circle,.nav-item.active rect{color:var(--pink-deep);}
+.nav-item.active path,.nav-item.active circle,.nav-item.active rect{stroke:var(--pink-deep) !important; fill:var(--pink-deep) !important;}
+.nav-item:not(.active) path,.nav-item:not(.active) circle,.nav-item:not(.active) rect{stroke:var(--text-soft); fill:none;}
 
-  footer.foot{
-    text-align:center; font-size:10px; color:var(--ink-soft); padding:18px 0 10px; letter-spacing:.04em;
-  }
-
-  /* Bottom nav iOS26 glass */
-  nav.tabbar{
-    position:fixed; left:0; right:0; bottom:16px; z-index:200;
-    display:flex; justify-content:center;
-  }
-  .tabbar-inner{
-    display:flex; gap:4px;
-    background:rgba(255,255,255,0.55);
-    backdrop-filter:blur(22px) saturate(180%);
-    -webkit-backdrop-filter:blur(22px) saturate(180%);
-    border:1px solid rgba(255,255,255,0.8);
-    border-radius:28px;
-    padding:7px;
-    box-shadow:0 10px 30px -8px rgba(255,120,170,0.45), inset 0 1px 0 rgba(255,255,255,0.9);
-    max-width:460px;
-    width:calc(100% - 36px);
-  }
-  .tab-item{
-    flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
-    padding:8px 4px 7px; border-radius:20px; cursor:pointer;
-    color:var(--ink-soft); transition:background .25s ease, color .25s ease;
-  }
-  .tab-item svg{width:21px; height:21px; transition:transform .2s ease;}
-  .tab-item span{font-size:9.5px; font-weight:700; letter-spacing:.02em;}
-  .tab-item.active{
-    background:rgba(255,255,255,0.85); color:var(--pink-deep);
-    box-shadow:0 4px 10px -4px rgba(255,120,170,0.4);
-  }
-  .tab-item.active svg{transform:translateY(-1px);}
-
-  @media (min-width:540px){
-    #app{margin:0 auto;}
-  }
+footer.app-footer{
+  text-align:center;
+  font-size:9.5px;
+  color:var(--text-soft);
+  padding:6px 0 8px;
+  opacity:0.8;
+}
 </style>
 </head>
 <body>
 
+<div class="bg-blob b1"></div>
+<div class="bg-blob b2"></div>
+<div class="bg-blob b3"></div>
+
+<!-- LOADER -->
 <div id="loader">
-  <div class="heart-wrap">
-    <svg class="heart-svg" viewBox="0 0 100 90">
-      <path class="heart-fill" d="M50 82 C 20 60, 4 40, 4 22 C 4 6, 18 -2, 32 4 C 40 7, 47 14, 50 20 C 53 14, 60 7, 68 4 C 82 -2, 96 6, 96 22 C 96 40, 80 60, 50 82 Z"/>
-      <path class="heart-path" d="M50 82 C 20 60, 4 40, 4 22 C 4 6, 18 -2, 32 4 C 40 7, 47 14, 50 20 C 53 14, 60 7, 68 4 C 82 -2, 96 6, 96 22 C 96 40, 80 60, 50 82 Z"/>
-    </svg>
+  <svg class="loader-heart" viewBox="0 0 100 100">
+    <path d="M50 85 C20 65, 8 45, 8 28 C8 12, 22 4, 35 8 C42 10, 48 16, 50 22 C52 16, 58 10, 65 8 C78 4, 92 12, 92 28 C92 45, 80 65, 50 85 Z"/>
+  </svg>
+  <div class="loader-text">よみこみちゅう...</div>
+</div>
+
+<!-- HEADER -->
+<header class="app-header">
+  <div class="brand-tag">恋愛研究所 公式 study room</div>
+  <div class="app-title">ときねね<span>study room</span></div>
+  <div class="app-sub">ver 1.03 ・ for ときねね</div>
+</header>
+
+<!-- ============ HOME ============ -->
+<section class="page active" id="page-home">
+
+  <div class="hero-card">
+    <div class="hero-greet">おつかれさま、</div>
+    <div class="hero-name">ときねね ちゃん 🩷</div>
+    <div class="hero-quote">今日もコツコツがんばろうね。小さな一歩が、未来のきらめきになるよ。</div>
   </div>
-  <div class="loader-text">よみこみちゅう<span class="loader-dots"><span>.</span><span>.</span><span>.</span></span></div>
-</div>
 
-<div id="app">
-
-  <header class="topbar">
-    <svg class="logo-heart" viewBox="0 0 100 90">
-      <path fill="#ff6fa8" d="M50 82 C 20 60, 4 40, 4 22 C 4 6, 18 -2, 32 4 C 40 7, 47 14, 50 20 C 53 14, 60 7, 68 4 C 82 -2, 96 6, 96 22 C 96 40, 80 60, 50 82 Z"/>
-    </svg>
-    <div class="brand-text">
-      <h1>ときねね study room</h1>
-      <p>ver 1.02 ・ 恋愛研究所</p>
-    </div>
-  </header>
-
-  <!-- ===== HOME ===== -->
-  <section class="page active" id="page-home">
-    <div class="hero-card">
-      <h2>おつかれさま、今日もコツコツ♡</h2>
-      <p>勉強の相棒「ときねねstudy room」。教材・カレンダー・時間割をひとまとめに。すきま時間に開いてね。</p>
-    </div>
-
-    <div class="section-title"><span class="dot"></span>きょうの集中タイム</div>
-    <div class="card">
-      <div class="timer-mode" id="timerMode">しゅうちゅう タイム</div>
-      <div class="timer-display" id="timerDisplay">25:00</div>
-      <div class="timer-preset">
-        <div class="preset-chip active" data-min="25">25分</div>
-        <div class="preset-chip" data-min="15">15分</div>
-        <div class="preset-chip" data-min="5">5分(休憩)</div>
-      </div>
-      <div class="timer-btns" style="margin-top:14px;">
-        <button class="pill-btn primary" id="timerStart">スタート</button>
-        <button class="pill-btn" id="timerReset">リセット</button>
+  <!-- Pomodoro timer: AI's chosen extra content -->
+  <div class="card timer-card">
+    <div class="card-title"><span class="dot"></span>集中タイマー</div>
+    <div class="timer-ring-wrap">
+      <svg class="timer-ring" viewBox="0 0 160 160">
+        <circle class="timer-bg" cx="80" cy="80" r="68"></circle>
+        <circle class="timer-fg" id="timerCircle" cx="80" cy="80" r="68" stroke-dasharray="427" stroke-dashoffset="0" transform="rotate(-90 80 80)"></circle>
+      </svg>
+      <div class="timer-center">
+        <div class="timer-time" id="timerDisplay">25:00</div>
+        <div class="timer-mode" id="timerMode">しゅうちゅう タイム</div>
       </div>
     </div>
-
-    <div class="section-title"><span class="dot"></span>おべんきょうリンク</div>
-    <div class="card" style="padding:6px 16px;">
-      <a class="link-row" href="https://sing-book.sing.jp/viewer/2997fe33c2c641a498d4817731710a90?index=%2Fviewer%2F2997fe33c2c641a498d4817731710a90&print=0&outline=0&page=1" target="_blank" rel="noopener">
-        <div class="link-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#a3486b" stroke-width="1.8"><path d="M4 4h7v16H4z"/><path d="M13 4h7v16h-7z"/><path d="M11 6l2 0"/></svg></div>
-        <div class="link-text"><strong>国語ワーク 回答</strong><span>新しいタブで開く</span></div>
-        <div class="link-arrow">›</div>
-      </a>
-      <a class="link-row" href="https://seju.tokyo/talents/nene-tokita/" target="_blank" rel="noopener">
-        <div class="link-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#a3486b" stroke-width="1.8"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.5-7 10-7 10Z"/></svg></div>
-        <div class="link-text"><strong>ときねね（SEJU）</strong><span>プロフィールページへ</span></div>
-        <div class="link-arrow">›</div>
-      </a>
-      <a class="link-row" href="https://renaikenkyuzyo.github.io/Renaikenkyuzyo-site1" target="_blank" rel="noopener">
-        <div class="link-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#a3486b" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></div>
-        <div class="link-text"><strong>恋愛研究所</strong><span>サイト運営ページへ</span></div>
-        <div class="link-arrow">›</div>
-      </a>
+    <div class="timer-controls">
+      <button class="timer-btn" id="timerStart">スタート</button>
+      <button class="timer-btn secondary" id="timerReset">リセット</button>
     </div>
+  </div>
 
-    <div class="section-title"><span class="dot"></span>フィードバック・ふぐあい報告</div>
-    <div class="card">
-      <select id="fbType">
-        <option value="ふぐあい報告">ふぐあい報告</option>
-        <option value="ご意見・ご感想">ご意見・ご感想</option>
-        <option value="追加してほしい機能">追加してほしい機能</option>
-        <option value="その他">その他</option>
-      </select>
-      <textarea id="fbText" placeholder="気になったこと、直してほしいところなど、自由に書いてね♡"></textarea>
-      <button class="send-btn" id="fbSend">メールで送信する</button>
-      <div class="fb-note">送信ボタンを押すとメールアプリが開きます。内容を確認してそのまま送信してください。宛先：ryufuchu3135@outlook.jp</div>
-    </div>
-
-    <footer class="foot">© 恋愛研究所 ｜ ときねねstudy room ver 1.02</footer>
-  </section>
-
-  <!-- ===== CALENDAR ===== -->
-  <section class="page" id="page-calendar">
-    <div class="section-title"><span class="dot"></span>カレンダー</div>
-    <div class="card" style="padding:8px;">
-      <div class="embed-wrap">
-        <iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=Asia%2FTokyo&showPrint=0&src=cjYxMzM0QGpocy51LXJ5dWt5dS5hYy5qcA&src=Y182YzMzOGUzNzgwODEyYTY1ZmFlZTM0YmZmNjM4NzU0NDZjZTgzMTkxNjkyMjJhY2ExZDExNzcwNmIyN2NhOWMyQGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20&src=Y19jbGFzc3Jvb20wNmMxZTQ4NkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20wZDFlOWI3MEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20wZTQxY2YyMkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20wZmQ0MjdjNkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20xMGVlZTYxZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20xNWZhMDQ1ZEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20xNzNmYmI3OEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20xZWFiNTk4ZUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20yNTVkY2VmYUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20yN2Q2MTI1Y0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20yZjM5YTNiMEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20zMGI0NjRlMUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb200MGQ3NzBkM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb200NGQ0YTFhMUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb200YTA4MWNmY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb200Y2M3YTJkZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb201NjUxMmYwYUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb201NmFjYmI4N0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb201ZWI2YWFmOUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb201ZjdlOGI5N0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb202Mzk4ZTcyY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb202YTE2NGU3MUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb203ZGZmOWM2NEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb204OWI4OTE1OEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb204ZDFhYzcyZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb204ZTA0NzUzNEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb204ZjNiNTJmMkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb204ZmU1MTlkZmQ1YzRAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=Y19jbGFzc3Jvb205YTNhYzhkOUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21hNTZmNGMzN0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21hNjhhMzViNUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21hOTcyYzNmZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21hYTQ2NTRiYkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21iYWFkNjcxMUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21iYzFjZjIwMUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21jMWI1NjY5YkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21jMWVmMTljM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21lNzIyNTUxM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21lZmY5NzIzMkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21mYzNkOTRiMUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=amEuamFwYW5lc2UjaG9saWRheUBncm91cC52LmNhbGVuZGFyLmdvb2dsZS5jb20&color=%23039be5" height="600" frameborder="0" scrolling="no"></iframe>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>よく使うもの</div>
+    <div class="quick-grid">
+      <div class="quick-item" onclick="goPage('calendar')">
+        <svg class="quick-icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="4" stroke="#ff6fb0" stroke-width="1.6"/><path d="M3 9h18" stroke="#ff6fb0" stroke-width="1.6"/><path d="M8 3v4M16 3v4" stroke="#ff6fb0" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <div class="quick-label">カレンダー</div>
+        <div class="quick-sub">予定をみる</div>
+      </div>
+      <div class="quick-item" onclick="goPage('book')">
+        <svg class="quick-icon" viewBox="0 0 24 24" fill="none"><path d="M4 5c2-1.5 5-1.5 7 0v14c-2-1.5-5-1.5-7 0V5Z" stroke="#9a7af0" stroke-width="1.6"/><path d="M20 5c-2-1.5-5-1.5-7 0v14c2-1.5 5-1.5 7 0V5Z" stroke="#9a7af0" stroke-width="1.6"/></svg>
+        <div class="quick-label">教科書・答え</div>
+        <div class="quick-sub">こくご ワーク</div>
+      </div>
+      <div class="quick-item" onclick="goPage('time')">
+        <svg class="quick-icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="17" rx="3" stroke="#5bb8e6" stroke-width="1.6"/><path d="M3 9.5h18" stroke="#5bb8e6" stroke-width="1.6"/></svg>
+        <div class="quick-label">時間割</div>
+        <div class="quick-sub">こんしゅう</div>
+      </div>
+      <div class="quick-item" onclick="window.open('https://seju.tokyo/talents/nene-tokita/','_blank')">
+        <svg class="quick-icon" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.4-9.5-9C1 8 3 4.5 7 4.5c2 0 3.7 1.2 5 3 1.3-1.8 3-3 5-3 4 0 6 3.5 4.5 7.5C19 16.6 12 21 12 21Z" stroke="#ff6fb0" stroke-width="1.6"/></svg>
+        <div class="quick-label">SEJU ページ</div>
+        <div class="quick-sub">ときねね</div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- ===== TEXTBOOK ===== -->
-  <section class="page" id="page-book">
-    <div class="section-title"><span class="dot"></span>教科書・答え</div>
-    <div class="card">
-      <p style="font-size:13px; line-height:1.7; margin:4px 4px 16px; color:var(--ink-soft);">タップすると、新しいタブで教科書・答えのPDFが開きます。</p>
-      <a class="ext-btn" href="https://drive.google.com/file/d/1x7jXqvPXzxo6Q-OzPcwo8e9U8sYxyP0Y/view?usp=sharing" target="_blank" rel="noopener">教科書・答えをひらく ›</a>
-    </div>
-  </section>
-
-  <!-- ===== TIMETABLE ===== -->
-  <section class="page" id="page-time">
-    <div class="section-title"><span class="dot"></span>時間割</div>
-    <div class="card" style="padding:8px;">
-      <div class="embed-wrap">
-        <iframe src="https://drive.google.com/file/d/1CsahAmXmoJViIj8Q3SR3-di6b_LiCW02/preview" height="480" allow="autoplay"></iframe>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>リンク</div>
+    <a class="link-row" href="https://sing-book.sing.jp/viewer/2997fe33c2c641a498d4817731710a90?index=%2Fviewer%2F2997fe33c2c641a498d4817731710a90&print=0&outline=0&page=1" target="_blank">
+      <div class="link-left">
+        <div class="link-icon" style="background:rgba(154,122,240,0.18);">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 5c2-1.5 5-1.5 7 0v14c-2-1.5-5-1.5-7 0V5Z" stroke="#9a7af0" stroke-width="1.6"/></svg>
+        </div>
+        <div>
+          <div class="link-text-title">国語ワーク 解答</div>
+          <div class="link-text-sub">新しいタブで開く</div>
+        </div>
       </div>
-      <p style="font-size:11px; color:var(--ink-soft); margin:10px 4px 2px;">表示されない場合は <a href="https://drive.google.com/file/d/1CsahAmXmoJViIj8Q3SR3-di6b_LiCW02/view?usp=sharing" target="_blank" rel="noopener" style="color:var(--pink-deep); font-weight:700;">こちら</a> から開いてください。</p>
-    </div>
-  </section>
+      <div class="link-arrow">›</div>
+    </a>
+    <a class="link-row" href="https://seju.tokyo/talents/nene-tokita/" target="_blank">
+      <div class="link-left">
+        <div class="link-icon" style="background:rgba(255,111,176,0.18);">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.4-9.5-9C1 8 3 4.5 7 4.5c2 0 3.7 1.2 5 3 1.3-1.8 3-3 5-3 4 0 6 3.5 4.5 7.5C19 16.6 12 21 12 21Z" stroke="#ff6fb0" stroke-width="1.6"/></svg>
+        </div>
+        <div>
+          <div class="link-text-title">SEJU ときねね ページ</div>
+          <div class="link-text-sub">プロフィールを見る</div>
+        </div>
+      </div>
+      <div class="link-arrow">›</div>
+    </a>
+  </div>
 
-</div>
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>フィードバック・不具合報告</div>
+    <label class="field-label">種類</label>
+    <div class="seg-group">
+      <div class="seg-btn active" data-type="feedback">ご意見</div>
+      <div class="seg-btn" data-type="bug">不具合</div>
+    </div>
+    <label class="field-label">タイトル</label>
+    <input class="field-input" id="fbTitle" type="text" placeholder="例：カレンダーが見れない">
+    <label class="field-label">内容</label>
+    <textarea class="field-textarea" id="fbBody" placeholder="気になったこと・困ったことを書いてね"></textarea>
+    <button class="submit-btn" onclick="sendFeedback()">メールで送信する</button>
+    <div class="feedback-note">送信ボタンを押すと、メールアプリの作成画面が開きます。内容を確認してそのまま送信できます。宛先：ryufuchu3135@outlook.jp</div>
+  </div>
 
-<nav class="tabbar">
-  <div class="tabbar-inner">
-    <div class="tab-item active" data-page="home">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
-      <span>ホーム</span>
+  <footer class="app-footer">恋愛研究所 ｜ ときねね study room ver 1.03</footer>
+</section>
+
+<!-- ============ CALENDAR ============ -->
+<section class="page" id="page-calendar">
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>カレンダー</div>
+    <div class="iframe-wrap">
+      <iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=Asia%2FTokyo&showPrint=0&src=cjYxMzM0QGpocy51LXJ5dWt5dS5hYy5qcA&src=Y182YzMzOGUzNzgwODEyYTY1ZmFlZTM0YmZmNjM4NzU0NDZjZTgzMTkxNjkyMjJhY2ExZDExNzcwNmIyN2NhOWMyQGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20&src=Y19jbGFzc3Jvb20wNmMxZTQ4NkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20wZDFlOWI3MEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20wZTQxY2YyMkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20wZmQ0MjdjNkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20xMGVlZTYxZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20xNWZhMDQ1ZEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20xNzNmYmI3OEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20xZWFiNTk4ZUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20yNTVkY2VmYUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20yN2Q2MTI1Y0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20yZjM5YTNiMEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20zMGI0NjRlMUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb200MGQ3NzBkM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb200NGQ0YTFhMUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb200YTA4MWNmY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb200Y2M3YTJkZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb201NjUxMmYwYUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb201NmFjYmI4N0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb201ZWI2YWFmOUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb201ZjdlOGI5N0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb202Mzk4ZTcyY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb202YTE2NGU3MUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb203ZGZmOWM2NEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb204OWI4OTE1OEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb204ZDFhYzcyZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb204ZTA0NzUzNEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb204ZjNiNTJmMkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb204ZmU1MTlkZmQ1YzRAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=Y19jbGFzc3Jvb205YTNhYzhkOUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21hNTZmNGMzN0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21hNjhhMzViNUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21hOTcyYzNmZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21hYTQ2NTRiYkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21iYWFkNjcxMUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21iYzFjZjIwMUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21jMWI1NjY5YkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21jMWVmMTljM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21lNzIyNTUxM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21lZmY5NzIzMkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21mYzNkOTRiMUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=amEuamFwYW5lc2UjaG9saWRheUBncm91cC52LmNhbGVuZGFyLmdvb2dsZS5jb20&color=%23039be5&color=%23f4511e&color=%23202124&color=%23007b83&color=%231967d2&color=%23c26401&color=%23b80672&color=%23202124&color=%23c26401&color=%23c26401&color=%23b80672&color=%231967d2&color=%237627bb&color=%23202124&color=%23b80672&color=%23c26401&color=%231967d2&color=%23202124&color=%231967d2&color=%23c26401&color=%231967d2&color=%231967d2&color=%23137333&color=%23c26401&color=%23202124&color=%23174ea6&color=%23174ea6&color=%231967d2&color=%23137333&color=%23c26401&color=%23137333&color=%23007b83&color=%231967d2&color=%231967d2&color=%23202124&color=%23174ea6&color=%231967d2&color=%231967d2&color=%231967d2&color=%231967d2&color=%23137333&color=%231967d2&color=%230b8043" width="100%" height="500" frameborder="0" scrolling="no"></iframe>
     </div>
-    <div class="tab-item" data-page="calendar">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
-      <span>カレンダー</span>
+  </div>
+</section>
+
+<!-- ============ 教科書・答え ============ -->
+<section class="page" id="page-book">
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>教科書・答え</div>
+    <div class="link-row" style="margin-bottom:10px;">
+      <div class="link-left">
+        <div class="link-icon" style="background:rgba(154,122,240,0.18);">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 5c2-1.5 5-1.5 7 0v14c-2-1.5-5-1.5-7 0V5Z" stroke="#9a7af0" stroke-width="1.6"/><path d="M20 5c-2-1.5-5-1.5-7 0v14c2-1.5 5-1.5 7 0V5Z" stroke="#9a7af0" stroke-width="1.6"/></svg>
+        </div>
+        <div>
+          <div class="link-text-title">国語ワーク 解答</div>
+          <div class="link-text-sub">sing-book ビューア</div>
+        </div>
+      </div>
     </div>
-    <div class="tab-item" data-page="book">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h7v16H4z"/><path d="M13 4h7v16h-7z"/></svg>
-      <span>教科書・答え</span>
+    <button class="open-btn" onclick="window.open('https://sing-book.sing.jp/viewer/2997fe33c2c641a498d4817731710a90?index=%2Fviewer%2F2997fe33c2c641a498d4817731710a90&print=0&outline=0&page=1','_blank')">
+      新しいタブで開く ›
+    </button>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>教科書 PDF</div>
+    <div class="link-row" style="margin-bottom:10px;">
+      <div class="link-left">
+        <div class="link-icon" style="background:rgba(255,111,176,0.18);">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke="#ff6fb0" stroke-width="1.6"/><path d="M14 3v6h6" stroke="#ff6fb0" stroke-width="1.6"/></svg>
+        </div>
+        <div>
+          <div class="link-text-title">教科書 データ</div>
+          <div class="link-text-sub">Google Drive</div>
+        </div>
+      </div>
     </div>
-    <div class="tab-item" data-page="time">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-      <span>時間割</span>
+    <button class="open-btn" onclick="window.open('https://drive.google.com/file/d/1x7jXqvPXzxo6Q-OzPcwo8e9U8sYxyP0Y/view?usp=sharing','_blank')">
+      新しいタブで開く ›
+    </button>
+  </div>
+</section>
+
+<!-- ============ 時間割 ============ -->
+<section class="page" id="page-time">
+  <div class="card">
+    <div class="card-title"><span class="dot"></span>時間割</div>
+    <div class="iframe-wrap">
+      <iframe src="https://drive.google.com/file/d/1CsahAmXmoJViIj8Q3SR3-di6b_LiCW02/preview" height="480" allow="autoplay"></iframe>
     </div>
+    <button class="open-btn" onclick="window.open('https://drive.google.com/file/d/1CsahAmXmoJViIj8Q3SR3-di6b_LiCW02/view?usp=sharing','_blank')">
+      新しいタブで開く ›
+    </button>
+  </div>
+</section>
+
+<!-- ===== BOTTOM NAV ===== -->
+<nav class="bottom-nav">
+  <div class="nav-item active" data-page="home" onclick="goPage('home')">
+    <svg viewBox="0 0 24 24"><path d="M4 11.5 12 4l8 7.5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10v9a1 1 0 0 0 1 1h3v-6h4v6h3a1 1 0 0 0 1-1v-9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div class="nav-label">ホーム</div>
+  </div>
+  <div class="nav-item" data-page="calendar" onclick="goPage('calendar')">
+    <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="4" stroke-width="1.8"/><path d="M3 9h18" stroke-width="1.8"/><path d="M8 3v4M16 3v4" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <div class="nav-label">カレンダー</div>
+  </div>
+  <div class="nav-item" data-page="book" onclick="goPage('book')">
+    <svg viewBox="0 0 24 24"><path d="M4 5c2-1.5 5-1.5 7 0v14c-2-1.5-5-1.5-7 0V5Z" stroke-width="1.8"/><path d="M20 5c-2-1.5-5-1.5-7 0v14c2-1.5 5-1.5 7 0V5Z" stroke-width="1.8"/></svg>
+    <div class="nav-label">教科書・答え</div>
+  </div>
+  <div class="nav-item" data-page="time" onclick="goPage('time')">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="3" stroke-width="1.8"/><path d="M3 9.5h18" stroke-width="1.8"/></svg>
+    <div class="nav-label">時間割</div>
   </div>
 </nav>
 
 <script>
-  // loader
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      document.getElementById('loader').classList.add('hide');
-      document.getElementById('app').classList.add('show');
-    }, 1700);
+// loader
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loader').classList.add('hide');
+  }, 1300);
+});
+
+// page nav
+function goPage(name){
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelector('.nav-item[data-page="' + name + '"]').classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// segmented control
+document.querySelectorAll('.seg-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
   });
+});
 
-  // tab navigation
-  const tabs = document.querySelectorAll('.tab-item');
-  const pages = document.querySelectorAll('.page');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      pages.forEach(p => p.classList.remove('active'));
-      document.getElementById('page-' + tab.dataset.page).classList.add('active');
-      window.scrollTo({top:0, behavior:'smooth'});
-    });
-  });
+// feedback -> mailto
+function sendFeedback(){
+  const type = document.querySelector('.seg-btn.active').dataset.type === 'bug' ? '不具合報告' : 'ご意見・フィードバック';
+  const title = document.getElementById('fbTitle').value.trim();
+  const body = document.getElementById('fbBody').value.trim();
+  const subject = encodeURIComponent('【ときねねstudy room】' + type + (title ? '：' + title : ''));
+  const mailBody = encodeURIComponent(
+    'ときねね study room へのフィードバックです。\n\n' +
+    '種類：' + type + '\n' +
+    'タイトル：' + (title || '（未入力）') + '\n\n' +
+    '内容：\n' + (body || '（未入力）') + '\n\n' +
+    '---\n送信元：ときねね study room ver1.03'
+  );
+  window.location.href = 'mailto:ryufuchu3135@outlook.jp?subject=' + subject + '&body=' + mailBody;
+}
 
-  // Pomodoro timer
-  let totalSeconds = 25*60;
-  let remaining = totalSeconds;
-  let timerInterval = null;
-  let isBreak = false;
-  const display = document.getElementById('timerDisplay');
-  const modeLabel = document.getElementById('timerMode');
-  const startBtn = document.getElementById('timerStart');
-  const resetBtn = document.getElementById('timerReset');
-  const chips = document.querySelectorAll('.preset-chip');
+// Pomodoro timer
+let totalSeconds = 25*60;
+let remaining = totalSeconds;
+let timerInterval = null;
+let isBreak = false;
+const circle = document.getElementById('timerCircle');
+const circumference = 2 * Math.PI * 68;
+circle.setAttribute('stroke-dasharray', circumference);
 
-  function fmt(s){
-    const m = Math.floor(s/60).toString().padStart(2,'0');
-    const sec = (s%60).toString().padStart(2,'0');
-    return m+':'+sec;
-  }
-  function updateDisplay(){ display.textContent = fmt(remaining); }
+function renderTimer(){
+  const m = Math.floor(remaining/60).toString().padStart(2,'0');
+  const s = (remaining%60).toString().padStart(2,'0');
+  document.getElementById('timerDisplay').textContent = m+':'+s;
+  const ratio = remaining/totalSeconds;
+  circle.setAttribute('stroke-dashoffset', circumference * (1-ratio));
+  document.getElementById('timerMode').textContent = isBreak ? 'きゅうけい タイム' : 'しゅうちゅう タイム';
+}
+renderTimer();
 
-  chips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      if(timerInterval) return;
-      chips.forEach(c=>c.classList.remove('active'));
-      chip.classList.add('active');
-      const min = parseInt(chip.dataset.min,10);
-      totalSeconds = min*60;
-      remaining = totalSeconds;
-      isBreak = (min===5);
-      modeLabel.textContent = isBreak ? 'きゅうけい タイム' : 'しゅうちゅう タイム';
-      updateDisplay();
-    });
-  });
-
-  startBtn.addEventListener('click', () => {
-    if(timerInterval){
-      clearInterval(timerInterval);
-      timerInterval = null;
-      startBtn.textContent = 'スタート';
-      return;
-    }
-    startBtn.textContent = 'ストップ';
-    timerInterval = setInterval(() => {
-      remaining--;
-      if(remaining <= 0){
-        clearInterval(timerInterval);
-        timerInterval = null;
-        remaining = 0;
-        startBtn.textContent = 'スタート';
-      }
-      updateDisplay();
-    }, 1000);
-  });
-
-  resetBtn.addEventListener('click', () => {
+document.getElementById('timerStart').addEventListener('click', function(){
+  if(timerInterval){
     clearInterval(timerInterval);
     timerInterval = null;
-    remaining = totalSeconds;
-    startBtn.textContent = 'スタート';
-    updateDisplay();
-  });
-
-  updateDisplay();
-
-  // feedback -> mailto
-  document.getElementById('fbSend').addEventListener('click', () => {
-    const type = document.getElementById('fbType').value;
-    const text = document.getElementById('fbText').value.trim();
-    if(!text){
-      document.getElementById('fbText').focus();
-      return;
+    this.textContent = 'スタート';
+    return;
+  }
+  this.textContent = 'ストップ';
+  timerInterval = setInterval(() => {
+    remaining--;
+    if(remaining <= 0){
+      isBreak = !isBreak;
+      totalSeconds = isBreak ? 5*60 : 25*60;
+      remaining = totalSeconds;
     }
-    const subject = encodeURIComponent('【ときねねstudy room】' + type);
-    const body = encodeURIComponent(
-      'ときねねstudy room ver1.02 へのフィードバックです。\n\n' +
-      '種類：' + type + '\n\n' +
-      '内容：\n' + text + '\n'
-    );
-    window.location.href = 'mailto:ryufuchu3135@outlook.jp?subject=' + subject + '&body=' + body;
-  });
-</script>
+    renderTimer();
+  }, 1000);
+});
 
+document.getElementById('timerReset').addEventListener('click', () => {
+  clearInterval(timerInterval);
+  timerInterval = null;
+  document.getElementById('timerStart').textContent = 'スタート';
+  isBreak = false;
+  totalSeconds = 25*60;
+  remaining = totalSeconds;
+  renderTimer();
+});
+</script>
 </body>
 </html>

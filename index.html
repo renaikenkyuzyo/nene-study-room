@@ -2,677 +2,461 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>ときねね study room ver1.03</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>ときねね study room</title>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{
-  --pink-1:#ffe4ee;
-  --pink-2:#ffc3dd;
-  --pink-3:#ff9fc9;
-  --pink-deep:#ff6fb0;
-  --lav-1:#e8e0ff;
-  --lav-2:#d4c5ff;
-  --sky-1:#dff3ff;
-  --cream:#fffaf7;
-  --text-deep:#6b4a5a;
-  --text-soft:#9a7a8a;
-  --glass-bg:rgba(255,255,255,0.45);
-  --glass-border:rgba(255,255,255,0.7);
-  --shadow-soft:0 8px 24px rgba(255,150,190,0.25);
+  --pink:#FF8FAB;--lpink:#FFD6E7;--purple:#C77DFF;--lpurple:#EAD5FF;
+  --bg:#FFF5F8;--text:#4A3F5C;--textl:#9B8DAA;--white:#fff;
+  --shadow:0 8px 32px rgba(199,125,255,0.15)
 }
-*{box-sizing:border-box; margin:0; padding:0;}
-html,body{
-  font-family:'Zen Maru Gothic','Quicksand',sans-serif;
-  background:linear-gradient(160deg,var(--pink-1) 0%, var(--lav-1) 45%, var(--sky-1) 100%);
-  color:var(--text-deep);
-  overflow-x:hidden;
-  -webkit-tap-highlight-color:transparent;
-}
-body{
-  min-height:100vh;
-  padding-bottom:92px;
-  position:relative;
-}
-/* floating decorative blobs */
-.bg-blob{
-  position:fixed;
-  border-radius:50%;
-  filter:blur(40px);
-  opacity:0.5;
-  z-index:0;
-  pointer-events:none;
-}
-.bg-blob.b1{width:220px;height:220px;background:var(--pink-2);top:-60px;left:-60px;}
-.bg-blob.b2{width:260px;height:260px;background:var(--lav-2);bottom:80px;right:-80px;}
-.bg-blob.b3{width:160px;height:160px;background:var(--sky-1);top:40%;left:60%;}
+body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
 
-/* ====== LOADER ====== */
-#loader{
-  position:fixed; inset:0;
-  background:linear-gradient(160deg,var(--pink-1),var(--lav-1));
-  z-index:9999;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  transition:opacity 0.6s ease, visibility 0.6s ease;
-}
-#loader.hide{opacity:0; visibility:hidden;}
-.loader-heart{width:90px;height:90px;}
-.loader-heart path{
-  fill:none;
-  stroke:var(--pink-deep);
-  stroke-width:6;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-  stroke-dasharray:340;
-  stroke-dashoffset:340;
-  animation:drawHeart 1.4s ease forwards, fillPulse 1.4s ease forwards;
-}
-@keyframes drawHeart{ to{stroke-dashoffset:0;} }
-@keyframes fillPulse{
-  0%,70%{fill:transparent;}
-  100%{fill:var(--pink-3);}
-}
-.loader-text{
-  margin-top:18px;
-  font-size:13px;
-  letter-spacing:0.15em;
-  color:var(--text-soft);
-  font-weight:600;
-}
+/* LOADING */
+#ls{position:fixed;inset:0;background:linear-gradient(145deg,#FFF0F5 0%,#EDE6FF 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .8s ease,visibility .8s ease}
+#ls.hide{opacity:0;visibility:hidden;pointer-events:none}
+.lheart{width:130px;height:120px}
+.hfill{fill:url(#hg);opacity:0;animation:hfill .6s ease 1.8s forwards}
+.hstroke{fill:none;stroke:url(#hg);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:420;stroke-dashoffset:420;animation:hdraw 2s cubic-bezier(.4,0,.2,1) .2s forwards}
+@keyframes hdraw{to{stroke-dashoffset:0}}
+@keyframes hfill{to{opacity:.65}}
+.ltxt{margin-top:22px;font-size:15px;font-weight:700;color:var(--purple);letter-spacing:.15em;opacity:0;animation:fin .5s ease 1.6s forwards}
+@keyframes fin{to{opacity:1}}
 
-/* ====== HEADER ====== */
-.app-header{
-  position:relative;
-  z-index:1;
-  padding:26px 20px 14px;
-  text-align:center;
-}
-.brand-tag{
-  display:inline-block;
-  font-size:11px;
-  letter-spacing:0.12em;
-  color:var(--text-soft);
-  background:var(--glass-bg);
-  border:1px solid var(--glass-border);
-  border-radius:20px;
-  padding:4px 14px;
-  backdrop-filter:blur(10px);
-  margin-bottom:10px;
-}
-.app-title{
-  font-size:24px;
-  font-weight:900;
-  color:var(--text-deep);
-  letter-spacing:0.02em;
-}
-.app-title span{color:var(--pink-deep);}
-.app-sub{
-  font-size:11.5px;
-  color:var(--text-soft);
-  margin-top:4px;
-  font-weight:500;
-}
+/* LAYOUT */
+#app{min-height:100vh;padding-bottom:110px}
+.page{display:none;animation:pin .35s ease}
+.page.active{display:block}
+@keyframes pin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-/* ====== PAGE CONTAINER ====== */
-.page{
-  display:none;
-  position:relative;
-  z-index:1;
-  padding:6px 16px 30px;
-  animation:fadeIn 0.4s ease;
-}
-.page.active{display:block;}
-@keyframes fadeIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+/* HOME HEADER */
+.hdr{background:linear-gradient(160deg,#FFD6E7 0%,#E3D0FF 100%);padding:52px 24px 36px;text-align:center;position:relative;overflow:hidden}
+.hdr::after{content:'';position:absolute;top:-60px;right:-60px;width:240px;height:240px;background:radial-gradient(circle,rgba(255,255,255,.4) 0%,transparent 70%);border-radius:50%;pointer-events:none}
+.site-ttl{font-size:26px;font-weight:800;color:#6B3FA0;letter-spacing:.04em;position:relative;z-index:1}
+.site-sub{font-size:12px;color:#9B7CC8;margin-top:5px;letter-spacing:.12em;position:relative;z-index:1}
 
-.card{
-  background:var(--glass-bg);
-  border:1px solid var(--glass-border);
-  border-radius:22px;
-  padding:18px;
-  backdrop-filter:blur(14px);
-  -webkit-backdrop-filter:blur(14px);
-  box-shadow:var(--shadow-soft);
-  margin-bottom:16px;
-}
-.card-title{
-  font-size:14px;
-  font-weight:700;
-  color:var(--text-deep);
-  margin-bottom:10px;
-  display:flex;
-  align-items:center;
-  gap:6px;
-}
-.card-title .dot{
-  width:7px;height:7px;border-radius:50%;
-  background:var(--pink-deep);
-  display:inline-block;
-}
+/* CARDS */
+.cw{padding:18px 16px}
+.card{background:var(--white);border-radius:22px;padding:20px;margin-bottom:14px;box-shadow:0 4px 24px rgba(199,125,255,.1);border:1px solid rgba(255,214,231,.5)}
+.ctitle{font-size:11px;font-weight:700;color:var(--textl);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:7px}
 
-/* ===== HOME PAGE ===== */
-.hero-card{
-  background:linear-gradient(135deg, var(--pink-2), var(--lav-2));
-  border:1px solid rgba(255,255,255,0.8);
-  border-radius:26px;
-  padding:22px;
-  position:relative;
-  overflow:hidden;
-  box-shadow:var(--shadow-soft);
-}
-.hero-card::after{
-  content:'';
-  position:absolute;
-  width:140px;height:140px;
-  background:rgba(255,255,255,0.35);
-  border-radius:50%;
-  top:-50px; right:-50px;
-}
-.hero-greet{font-size:12px; color:rgba(107,74,90,0.8); font-weight:600;}
-.hero-name{font-size:21px; font-weight:900; margin-top:4px;}
-.hero-quote{
-  font-size:11.5px;
-  margin-top:10px;
-  background:rgba(255,255,255,0.5);
-  border-radius:14px;
-  padding:8px 12px;
-  font-weight:500;
-  line-height:1.5;
-}
+/* LINK BTNS */
+.lbtn{display:flex;align-items:center;gap:12px;padding:13px 14px;background:linear-gradient(135deg,#FFF8FB,#F6EDFF);border-radius:16px;text-decoration:none;color:var(--text);margin-bottom:9px;border:1px solid rgba(199,125,255,.18);transition:transform .2s,box-shadow .2s}
+.lbtn:last-child{margin-bottom:0}
+.lbtn:active{transform:scale(.97)}
+.lico{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.lico.pk{background:linear-gradient(135deg,#FF8FAB,#FF5F8A)}
+.lico.pu{background:linear-gradient(135deg,#C77DFF,#9B4AFF)}
+.lbtext{flex:1;min-width:0}
+.lblabel{font-size:14px;font-weight:700;color:var(--text)}
+.lbdesc{font-size:11px;color:var(--textl);margin-top:2px}
 
-.quick-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-top:14px;
-}
-.quick-item{
-  background:var(--glass-bg);
-  border:1px solid var(--glass-border);
-  border-radius:18px;
-  padding:14px 12px;
-  text-align:center;
-  backdrop-filter:blur(12px);
-  cursor:pointer;
-  transition:transform 0.15s ease;
-}
-.quick-item:active{transform:scale(0.96);}
-.quick-icon{width:30px;height:30px;margin:0 auto 6px;}
-.quick-label{font-size:12px;font-weight:700;color:var(--text-deep);}
-.quick-sub{font-size:9.5px;color:var(--text-soft);margin-top:2px;}
+/* TIMER */
+.tdisp{text-align:center;padding:10px 0 16px}
+.tcirc{width:170px;height:170px;margin:0 auto 14px;position:relative}
+.tcirc svg{transform:rotate(-90deg);display:block}
+.tc-bg{fill:none;stroke:#FFE4EF;stroke-width:9}
+.tc-prog{fill:none;stroke:url(#tg);stroke-width:9;stroke-linecap:round;transition:stroke-dashoffset 1s linear}
+.tcc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.tmode{font-size:11px;font-weight:700;letter-spacing:.15em;color:var(--purple);margin-bottom:4px}
+.ttime{font-size:54px;font-weight:800;color:var(--text);line-height:1;letter-spacing:-.02em}
+.tctrl{display:flex;gap:10px;justify-content:center}
+.tbtn{padding:11px 26px;border:none;border-radius:50px;font-family:'M PLUS Rounded 1c',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:transform .2s}
+.tbtn:active{transform:scale(.95)}
+.tbtn.pri{background:linear-gradient(135deg,#FF8FAB,#C77DFF);color:#fff}
+.tbtn.sec{background:#FFE4EF;color:var(--pink)}
+.tsess{text-align:center;margin-top:10px;font-size:12px;color:var(--textl)}
 
-.link-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  background:rgba(255,255,255,0.55);
-  border-radius:16px;
-  padding:13px 14px;
-  margin-bottom:8px;
-  text-decoration:none;
-  color:var(--text-deep);
-}
-.link-row:last-child{margin-bottom:0;}
-.link-left{display:flex; align-items:center; gap:10px;}
-.link-icon{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.link-icon svg{width:18px;height:18px;}
-.link-text-title{font-size:13px;font-weight:700;}
-.link-text-sub{font-size:10px;color:var(--text-soft);margin-top:1px;}
-.link-arrow{font-size:14px;color:var(--pink-deep);}
+/* VERSION CARD */
+.vcard{background:linear-gradient(135deg,#FFF3F8,#F2E8FF);border-radius:22px;padding:20px;margin-bottom:14px;border:1px solid rgba(199,125,255,.2)}
+.vbadge{display:inline-block;background:linear-gradient(135deg,#FF8FAB,#C77DFF);color:#fff;font-size:10px;font-weight:700;padding:3px 12px;border-radius:50px;letter-spacing:.12em;margin-bottom:10px}
+.vttl{font-size:17px;font-weight:800;color:var(--text);margin-bottom:6px}
+.vdesc{font-size:13px;color:var(--textl);line-height:1.7}
+.vlist{margin-top:10px}
+.vitem{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text);margin-bottom:6px;line-height:1.5}
+.vdot{width:6px;height:6px;background:var(--pink);border-radius:50%;margin-top:6px;flex-shrink:0}
+.vfoot{font-size:11px;color:var(--textl);margin-top:10px;text-align:right}
 
-/* timer (signature AI element) */
-.timer-card{
-  background:linear-gradient(135deg, rgba(255,255,255,0.6), rgba(255,225,240,0.5));
-}
-.timer-ring-wrap{
-  display:flex; align-items:center; justify-content:center;
-  margin:8px 0 12px;
-  position:relative;
-}
-.timer-ring{width:150px;height:150px;}
-.timer-ring circle{fill:none; stroke-linecap:round;}
-.timer-bg{stroke:rgba(255,150,190,0.18); stroke-width:10;}
-.timer-fg{stroke:var(--pink-deep); stroke-width:10; transition:stroke-dashoffset 1s linear;}
-.timer-center{
-  position:absolute; inset:0;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-}
-.timer-time{font-size:26px; font-weight:900; color:var(--text-deep); letter-spacing:0.02em;}
-.timer-mode{font-size:10px; color:var(--text-soft); margin-top:2px; font-weight:600;}
-.timer-controls{display:flex; gap:10px; justify-content:center;}
-.timer-btn{
-  border:none;
-  background:var(--pink-deep);
-  color:#fff;
-  font-family:inherit;
-  font-weight:700;
-  font-size:12px;
-  padding:9px 20px;
-  border-radius:14px;
-  cursor:pointer;
-}
-.timer-btn.secondary{
-  background:rgba(255,255,255,0.6);
-  color:var(--text-deep);
-}
-.timer-btn:active{transform:scale(0.95);}
+/* FEEDBACK */
+.fchips{display:flex;gap:7px;margin-bottom:11px;flex-wrap:wrap}
+.fchip{padding:6px 14px;border-radius:50px;border:1.5px solid var(--lpink);background:#fff;font-family:'M PLUS Rounded 1c',sans-serif;font-size:12px;font-weight:500;color:var(--textl);cursor:pointer;transition:all .2s}
+.fchip.on{background:linear-gradient(135deg,#FF8FAB,#C77DFF);border-color:transparent;color:#fff}
+.ftxt{width:100%;padding:13px;border:1.5px solid var(--lpink);border-radius:14px;font-family:'M PLUS Rounded 1c',sans-serif;font-size:14px;color:var(--text);background:#FFFBFD;resize:none;height:96px;outline:none;transition:border-color .2s}
+.ftxt:focus{border-color:var(--purple)}
+.ftxt::placeholder{color:#D5BDE6}
+.fsbtn{width:100%;padding:13px;margin-top:10px;border:none;border-radius:14px;background:linear-gradient(135deg,#FF8FAB,#C77DFF);color:#fff;font-family:'M PLUS Rounded 1c',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:transform .2s,opacity .2s;letter-spacing:.05em}
+.fsbtn:active{transform:scale(.97);opacity:.9}
 
-/* feedback */
-.field-label{font-size:11px; font-weight:700; color:var(--text-soft); margin-bottom:5px; display:block;}
-.field-input,.field-textarea{
-  width:100%;
-  border:1px solid rgba(255,150,190,0.35);
-  background:rgba(255,255,255,0.6);
-  border-radius:14px;
-  padding:10px 12px;
-  font-family:inherit;
-  font-size:12.5px;
-  color:var(--text-deep);
-  margin-bottom:12px;
-  resize:none;
-}
-.field-textarea{min-height:90px; line-height:1.5;}
-.field-input:focus,.field-textarea:focus{outline:2px solid var(--pink-3);}
-.seg-group{display:flex; gap:8px; margin-bottom:12px;}
-.seg-btn{
-  flex:1;
-  text-align:center;
-  padding:8px 0;
-  border-radius:12px;
-  border:1px solid rgba(255,150,190,0.35);
-  background:rgba(255,255,255,0.4);
-  font-size:11.5px;
-  font-weight:700;
-  color:var(--text-soft);
-  cursor:pointer;
-}
-.seg-btn.active{background:var(--pink-deep); color:#fff; border-color:var(--pink-deep);}
-.submit-btn{
-  width:100%;
-  border:none;
-  background:linear-gradient(135deg,var(--pink-deep),var(--pink-3));
-  color:#fff;
-  font-family:inherit;
-  font-weight:700;
-  font-size:13.5px;
-  padding:13px 0;
-  border-radius:16px;
-  cursor:pointer;
-  box-shadow:0 6px 16px rgba(255,111,176,0.35);
-}
-.submit-btn:active{transform:scale(0.98);}
-.feedback-note{font-size:10px; color:var(--text-soft); margin-top:8px; line-height:1.5;}
+/* PAGE HEADER */
+.phdr{background:linear-gradient(160deg,#FFD6E7 0%,#E3D0FF 100%);padding:40px 24px 28px;text-align:center;position:relative;overflow:hidden}
+.phdr::after{content:'';position:absolute;top:-50px;right:-50px;width:200px;height:200px;background:radial-gradient(circle,rgba(255,255,255,.35) 0%,transparent 70%);border-radius:50%;pointer-events:none}
+.pttl{font-size:21px;font-weight:800;color:#6B3FA0;position:relative;z-index:1}
+.psub{font-size:12px;color:#9B7CC8;margin-top:4px;letter-spacing:.1em;position:relative;z-index:1}
 
-/* iframe wrap */
-.iframe-wrap{
-  border-radius:18px;
-  overflow:hidden;
-  border:1px solid var(--glass-border);
-  background:#fff;
-}
-.iframe-wrap iframe{display:block; width:100%; border:none;}
+/* CALENDAR */
+.calwrap{padding:16px}
+.calbox{background:#fff;border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
+.calbox iframe{width:100%;height:480px;border:none;display:block}
 
-.open-btn{
-  display:flex; align-items:center; justify-content:center; gap:6px;
-  width:100%;
-  border:none;
-  background:rgba(255,255,255,0.6);
-  color:var(--text-deep);
-  font-family:inherit;
-  font-weight:700;
-  font-size:12.5px;
-  padding:12px 0;
-  border-radius:14px;
-  margin-top:10px;
-  cursor:pointer;
-  border:1px solid var(--glass-border);
-}
-.open-btn:active{transform:scale(0.97);}
+/* TEXTBOOK */
+.tbwrap{padding:18px 16px}
+.tbhero{background:linear-gradient(135deg,#FF8FAB 0%,#C77DFF 100%);border-radius:22px;padding:28px 22px;text-align:center;color:#fff;margin-bottom:14px}
+.tbhttl{font-size:20px;font-weight:800;margin-bottom:8px}
+.tbhdesc{font-size:13px;opacity:.92;line-height:1.65}
+.tbhbtn{display:block;margin-top:18px;padding:13px 26px;background:#fff;color:#C77DFF;border-radius:50px;font-weight:700;font-size:14px;text-decoration:none;transition:transform .2s}
+.tbhbtn:active{transform:scale(.96)}
+.kgbtn{display:block;margin-top:12px;padding:13px;background:linear-gradient(135deg,#FF8FAB,#C77DFF);color:#fff;border-radius:14px;font-weight:700;font-size:14px;text-decoration:none;text-align:center;transition:transform .2s}
+.kgbtn:active{transform:scale(.97)}
 
-.empty-note{
-  text-align:center;
-  padding:30px 10px;
-  color:var(--text-soft);
-  font-size:12px;
-}
+/* TIMETABLE */
+.ttwrap{padding:16px}
+.ttbox{background:#fff;border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
+.ttbox iframe{width:100%;height:calc(100vh - 200px);min-height:420px;border:none;display:block}
 
-/* ===== BOTTOM NAV (iOS26 glass) ===== */
-.bottom-nav{
-  position:fixed;
-  left:50%;
-  bottom:14px;
-  transform:translateX(-50%);
-  width:min(94%,420px);
-  background:rgba(255,255,255,0.55);
-  border:1px solid rgba(255,255,255,0.8);
-  border-radius:28px;
-  backdrop-filter:blur(22px) saturate(180%);
-  -webkit-backdrop-filter:blur(22px) saturate(180%);
-  box-shadow:0 10px 30px rgba(180,120,160,0.28), inset 0 1px 1px rgba(255,255,255,0.9);
-  display:flex;
-  justify-content:space-around;
-  align-items:center;
-  padding:8px 6px;
-  z-index:100;
-}
-.nav-item{
-  display:flex; flex-direction:column; align-items:center;
-  gap:3px;
-  flex:1;
-  padding:6px 2px;
-  border-radius:18px;
-  cursor:pointer;
-  transition:background 0.2s ease;
-  -webkit-tap-highlight-color:transparent;
-}
-.nav-item svg{width:21px;height:21px; transition:transform 0.2s ease;}
-.nav-item .nav-label{font-size:9.5px; font-weight:700; color:var(--text-soft);}
-.nav-item.active{background:rgba(255,255,255,0.55);}
-.nav-item.active svg{transform:translateY(-1px);}
-.nav-item.active .nav-label,.nav-item.active path,.nav-item.active circle,.nav-item.active rect{color:var(--pink-deep);}
-.nav-item.active path,.nav-item.active circle,.nav-item.active rect{stroke:var(--pink-deep) !important; fill:var(--pink-deep) !important;}
-.nav-item:not(.active) path,.nav-item:not(.active) circle,.nav-item:not(.active) rect{stroke:var(--text-soft); fill:none;}
-
-footer.app-footer{
-  text-align:center;
-  font-size:9.5px;
-  color:var(--text-soft);
-  padding:6px 0 8px;
-  opacity:0.8;
-}
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);width:calc(100% - 28px);max-width:430px;height:68px;background:rgba(255,255,255,.22);backdrop-filter:blur(32px) saturate(200%);-webkit-backdrop-filter:blur(32px) saturate(200%);border:1px solid rgba(255,255,255,.52);border-radius:30px;box-shadow:0 8px 40px rgba(199,125,255,.18),0 2px 8px rgba(0,0,0,.07),inset 0 1px 0 rgba(255,255,255,.6);display:flex;align-items:center;justify-content:space-around;padding:0 6px;z-index:1000}
+.nitem{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 10px;border-radius:20px;cursor:pointer;transition:all .25s ease;flex:1;position:relative;user-select:none}
+.nitem.on{background:rgba(255,143,171,.15)}
+.nico{width:24px;height:24px;transition:transform .25s ease}
+.nitem.on .nico{transform:scale(1.12)}
+.nlbl{font-size:8.5px;font-weight:700;color:var(--textl);letter-spacing:.04em;transition:color .25s;white-space:nowrap}
+.nitem.on .nlbl{color:var(--pink)}
+.ndot{position:absolute;bottom:3px;width:4px;height:4px;background:var(--pink);border-radius:50%;opacity:0;transition:opacity .25s}
+.nitem.on .ndot{opacity:1}
+::-webkit-scrollbar{width:0}
 </style>
 </head>
 <body>
 
-<div class="bg-blob b1"></div>
-<div class="bg-blob b2"></div>
-<div class="bg-blob b3"></div>
-
-<!-- LOADER -->
-<div id="loader">
-  <svg class="loader-heart" viewBox="0 0 100 100">
-    <path d="M50 85 C20 65, 8 45, 8 28 C8 12, 22 4, 35 8 C42 10, 48 16, 50 22 C52 16, 58 10, 65 8 C78 4, 92 12, 92 28 C92 45, 80 65, 50 85 Z"/>
+<!-- LOADING SCREEN -->
+<div id="ls">
+  <svg class="lheart" viewBox="0 0 130 120" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="hg" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#FF8FAB"/>
+        <stop offset="100%" stop-color="#C77DFF"/>
+      </linearGradient>
+    </defs>
+    <path class="hfill" d="M65 102 C65 102 8 68 8 35 C8 19 21 8 37 8 C48 8 58 15 65 25 C72 15 82 8 93 8 C109 8 122 19 122 35 C122 68 65 102 65 102Z"/>
+    <path class="hstroke" d="M65 102 C65 102 8 68 8 35 C8 19 21 8 37 8 C48 8 58 15 65 25 C72 15 82 8 93 8 C109 8 122 19 122 35 C122 68 65 102 65 102Z"/>
   </svg>
-  <div class="loader-text">よみこみちゅう...</div>
+  <p class="ltxt">ときねね study room</p>
 </div>
 
-<!-- HEADER -->
-<header class="app-header">
-  <div class="brand-tag">恋愛研究所 公式 study room</div>
-  <div class="app-title">ときねね<span>study room</span></div>
-  <div class="app-sub">ver 1.03 ・ for ときねね</div>
-</header>
+<!-- APP -->
+<div id="app">
 
-<!-- ============ HOME ============ -->
-<section class="page active" id="page-home">
-
-  <div class="hero-card">
-    <div class="hero-greet">おつかれさま、</div>
-    <div class="hero-name">ときねね ちゃん 🩷</div>
-    <div class="hero-quote">今日もコツコツがんばろうね。小さな一歩が、未来のきらめきになるよ。</div>
+<!-- HOME -->
+<section id="page-home" class="page active">
+  <div class="hdr">
+    <svg style="display:block;margin:0 auto 16px;position:relative;z-index:1" width="100" height="90" viewBox="0 0 100 90" fill="none">
+      <path d="M10 20 Q10 15 15 15 L48 15 L48 72 L15 72 Q10 72 10 67 Z" fill="white" opacity=".75"/>
+      <path d="M52 15 L85 15 Q90 15 90 20 L90 67 Q90 72 85 72 L52 72 Z" fill="white" opacity=".65"/>
+      <rect x="47" y="12" width="6" height="62" rx="3" fill="#C77DFF" opacity=".5"/>
+      <rect x="16" y="24" width="24" height="2.5" rx="1.25" fill="#FFB3C6" opacity=".7"/>
+      <rect x="16" y="30" width="28" height="2" rx="1" fill="#D5BDE6" opacity=".6"/>
+      <rect x="16" y="35" width="22" height="2" rx="1" fill="#D5BDE6" opacity=".6"/>
+      <rect x="16" y="40" width="26" height="2" rx="1" fill="#D5BDE6" opacity=".6"/>
+      <rect x="56" y="24" width="24" height="2.5" rx="1.25" fill="#FFB3C6" opacity=".7"/>
+      <rect x="56" y="30" width="20" height="2" rx="1" fill="#D5BDE6" opacity=".6"/>
+      <rect x="56" y="35" width="26" height="2" rx="1" fill="#D5BDE6" opacity=".6"/>
+      <path d="M78 15 L78 30 L74 26 L70 30 L70 15 Z" fill="#FF8FAB" opacity=".7"/>
+      <path d="M7 8 L8.2 11.5 L12 11.5 L9 13.8 L10.2 17.3 L7 15 L3.8 17.3 L5 13.8 L2 11.5 L5.8 11.5 Z" fill="#FFD700" opacity=".8"/>
+      <circle cx="92" cy="10" r="3" fill="#FF8FAB" opacity=".6"/>
+      <circle cx="96" cy="30" r="2" fill="#C77DFF" opacity=".5"/>
+      <path d="M50 57 C50 57 44 52 44 48 C44 45.7 45.8 44 48 44 C49.1 44 50 44.6 50 44.6 C50 44.6 50.9 44 52 44 C54.2 44 56 45.7 56 48 C56 52 50 57 50 57Z" fill="#FF8FAB" opacity=".6"/>
+    </svg>
+    <h1 class="site-ttl">ときねね study room</h1>
+    <p class="site-sub">勉強をもっと楽しく、一緒に頑張ろう</p>
   </div>
 
-  <!-- Pomodoro timer: AI's chosen extra content -->
-  <div class="card timer-card">
-    <div class="card-title"><span class="dot"></span>集中タイマー</div>
-    <div class="timer-ring-wrap">
-      <svg class="timer-ring" viewBox="0 0 160 160">
-        <circle class="timer-bg" cx="80" cy="80" r="68"></circle>
-        <circle class="timer-fg" id="timerCircle" cx="80" cy="80" r="68" stroke-dasharray="427" stroke-dashoffset="0" transform="rotate(-90 80 80)"></circle>
-      </svg>
-      <div class="timer-center">
-        <div class="timer-time" id="timerDisplay">25:00</div>
-        <div class="timer-mode" id="timerMode">しゅうちゅう タイム</div>
+  <div class="cw">
+    <!-- Quick Links -->
+    <div class="card">
+      <div class="ctitle">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" fill="#FF8FAB"/><rect x="9" y="1" width="6" height="6" rx="1" fill="#FF8FAB" opacity=".6"/><rect x="1" y="9" width="6" height="6" rx="1" fill="#FF8FAB" opacity=".6"/><rect x="9" y="9" width="6" height="6" rx="1" fill="#FF8FAB"/></svg>
+        クイックリンク
+      </div>
+      <a href="https://sing-book.sing.jp/viewer/2997fe33c2c641a498d4817731710a90?index=%2Fviewer%2F2997fe33c2c641a498d4817731710a90&print=0&outline=0&page=1" target="_blank" class="lbtn">
+        <div class="lico pk">
+          <svg width="21" height="21" viewBox="0 0 21 21" fill="none">
+            <rect x="3" y="2" width="11" height="17" rx="2.5" fill="white" opacity=".9"/>
+            <path d="M14 2 L18 5.5 L18 19 L14 19Z" fill="white" opacity=".55"/>
+            <rect x="5.5" y="6" width="6" height="1.8" rx=".9" fill="#FF8FAB"/>
+            <rect x="5.5" y="9.5" width="8" height="1.5" rx=".75" fill="#FF8FAB" opacity=".6"/>
+            <rect x="5.5" y="12.5" width="5" height="1.5" rx=".75" fill="#FF8FAB" opacity=".6"/>
+          </svg>
+        </div>
+        <div class="lbtext">
+          <div class="lblabel">国語ワーク 回答</div>
+          <div class="lbdesc">答え合わせに使ってね</div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="#CDB8D8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="https://seju.tokyo/talents/nene-tokita/" target="_blank" class="lbtn">
+        <div class="lico pu">
+          <svg width="21" height="21" viewBox="0 0 21 21" fill="none">
+            <circle cx="10.5" cy="7.5" r="4" fill="white" opacity=".9"/>
+            <path d="M3 18.5c0-4.1 3.4-7.5 7.5-7.5s7.5 3.4 7.5 7.5" stroke="white" stroke-width="2" stroke-linecap="round" opacity=".85"/>
+          </svg>
+        </div>
+        <div class="lbtext">
+          <div class="lblabel">sejuときねねページ</div>
+          <div class="lbdesc">公式プロフィールはこちら</div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="#CDB8D8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    <!-- Pomodoro Timer -->
+    <div class="card">
+      <div class="ctitle">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="9.5" r="5.5" stroke="#C77DFF" stroke-width="1.4"/><path d="M8 7v2.5l1.8 1.1" stroke="#C77DFF" stroke-width="1.4" stroke-linecap="round"/><path d="M5.5 1.5h5M8 1.5v1.5" stroke="#C77DFF" stroke-width="1.4" stroke-linecap="round"/></svg>
+        ポモドーロタイマー
+      </div>
+      <div class="tdisp">
+        <div class="tcirc">
+          <svg width="170" height="170" viewBox="0 0 170 170">
+            <defs>
+              <linearGradient id="tg" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#FF8FAB"/>
+                <stop offset="100%" stop-color="#C77DFF"/>
+              </linearGradient>
+            </defs>
+            <circle class="tc-bg" cx="85" cy="85" r="72"/>
+            <circle class="tc-prog" id="tp" cx="85" cy="85" r="72"/>
+          </svg>
+          <div class="tcc">
+            <div class="tmode" id="tm">STUDY</div>
+            <div class="ttime" id="td">25:00</div>
+          </div>
+        </div>
+        <div class="tctrl">
+          <button class="tbtn sec" onclick="rTimer()">リセット</button>
+          <button class="tbtn pri" id="tsb" onclick="tTimer()">スタート</button>
+        </div>
+        <div class="tsess" id="ts">セッション 1 / 4</div>
       </div>
     </div>
-    <div class="timer-controls">
-      <button class="timer-btn" id="timerStart">スタート</button>
-      <button class="timer-btn secondary" id="timerReset">リセット</button>
+
+    <!-- Version info -->
+    <div class="vcard">
+      <div class="vbadge">ver 1.03</div>
+      <div class="vttl">ときねね study room</div>
+      <div class="vdesc">勉強をもっと楽しく、もっとスマートに。<br>ときねねのための学習サポートサイトです。</div>
+      <div class="vlist">
+        <div class="vitem"><div class="vdot"></div><span>ポモドーロタイマーを追加</span></div>
+        <div class="vitem"><div class="vdot"></div><span>カレンダー・時間割機能を実装</span></div>
+        <div class="vitem"><div class="vdot"></div><span>教科書・回答リンクを整備</span></div>
+        <div class="vitem"><div class="vdot"></div><span>フィードバック機能を搭載</span></div>
+        <div class="vitem"><div class="vdot"></div><span>iOS 26風ガラスナビゲーション採用</span></div>
+      </div>
+      <div class="vfoot">運営：恋愛研究所</div>
     </div>
-  </div>
 
-  <div class="card">
-    <div class="card-title"><span class="dot"></span>よく使うもの</div>
-    <div class="quick-grid">
-      <div class="quick-item" onclick="goPage('calendar')">
-        <svg class="quick-icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="16" rx="4" stroke="#ff6fb0" stroke-width="1.6"/><path d="M3 9h18" stroke="#ff6fb0" stroke-width="1.6"/><path d="M8 3v4M16 3v4" stroke="#ff6fb0" stroke-width="1.6" stroke-linecap="round"/></svg>
-        <div class="quick-label">カレンダー</div>
-        <div class="quick-sub">予定をみる</div>
+    <!-- Feedback -->
+    <div class="card">
+      <div class="ctitle">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="9" rx="2" stroke="#FF8FAB" stroke-width="1.4"/><path d="M5 15l3.5-4L12 15" fill="#FF8FAB" opacity=".5"/><path d="M4 6.5h8M4 9h5" stroke="#FF8FAB" stroke-width="1.4" stroke-linecap="round"/></svg>
+        フィードバック・不具合報告
       </div>
-      <div class="quick-item" onclick="goPage('book')">
-        <svg class="quick-icon" viewBox="0 0 24 24" fill="none"><path d="M4 5c2-1.5 5-1.5 7 0v14c-2-1.5-5-1.5-7 0V5Z" stroke="#9a7af0" stroke-width="1.6"/><path d="M20 5c-2-1.5-5-1.5-7 0v14c2-1.5 5-1.5 7 0V5Z" stroke="#9a7af0" stroke-width="1.6"/></svg>
-        <div class="quick-label">教科書・答え</div>
-        <div class="quick-sub">こくご ワーク</div>
+      <div class="fchips">
+        <button class="fchip on" onclick="sType(this,'フィードバック')">フィードバック</button>
+        <button class="fchip" onclick="sType(this,'不具合報告')">不具合報告</button>
+        <button class="fchip" onclick="sType(this,'リクエスト')">リクエスト</button>
+        <button class="fchip" onclick="sType(this,'その他')">その他</button>
       </div>
-      <div class="quick-item" onclick="goPage('time')">
-        <svg class="quick-icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="17" rx="3" stroke="#5bb8e6" stroke-width="1.6"/><path d="M3 9.5h18" stroke="#5bb8e6" stroke-width="1.6"/></svg>
-        <div class="quick-label">時間割</div>
-        <div class="quick-sub">こんしゅう</div>
-      </div>
-      <div class="quick-item" onclick="window.open('https://seju.tokyo/talents/nene-tokita/','_blank')">
-        <svg class="quick-icon" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.4-9.5-9C1 8 3 4.5 7 4.5c2 0 3.7 1.2 5 3 1.3-1.8 3-3 5-3 4 0 6 3.5 4.5 7.5C19 16.6 12 21 12 21Z" stroke="#ff6fb0" stroke-width="1.6"/></svg>
-        <div class="quick-label">SEJU ページ</div>
-        <div class="quick-sub">ときねね</div>
-      </div>
+      <textarea id="ft" class="ftxt" placeholder="気になった点・改善してほしいこと・リクエストなど、なんでもOK！"></textarea>
+      <button class="fsbtn" onclick="sendFB()">メールで送信する →</button>
     </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title"><span class="dot"></span>リンク</div>
-    <a class="link-row" href="https://sing-book.sing.jp/viewer/2997fe33c2c641a498d4817731710a90?index=%2Fviewer%2F2997fe33c2c641a498d4817731710a90&print=0&outline=0&page=1" target="_blank">
-      <div class="link-left">
-        <div class="link-icon" style="background:rgba(154,122,240,0.18);">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M4 5c2-1.5 5-1.5 7 0v14c-2-1.5-5-1.5-7 0V5Z" stroke="#9a7af0" stroke-width="1.6"/></svg>
-        </div>
-        <div>
-          <div class="link-text-title">国語ワーク 解答</div>
-          <div class="link-text-sub">新しいタブで開く</div>
-        </div>
-      </div>
-      <div class="link-arrow">›</div>
-    </a>
-    <a class="link-row" href="https://seju.tokyo/talents/nene-tokita/" target="_blank">
-      <div class="link-left">
-        <div class="link-icon" style="background:rgba(255,111,176,0.18);">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.4-9.5-9C1 8 3 4.5 7 4.5c2 0 3.7 1.2 5 3 1.3-1.8 3-3 5-3 4 0 6 3.5 4.5 7.5C19 16.6 12 21 12 21Z" stroke="#ff6fb0" stroke-width="1.6"/></svg>
-        </div>
-        <div>
-          <div class="link-text-title">SEJU ときねね ページ</div>
-          <div class="link-text-sub">プロフィールを見る</div>
-        </div>
-      </div>
-      <div class="link-arrow">›</div>
-    </a>
-  </div>
-
-  <div class="card">
-    <div class="card-title"><span class="dot"></span>フィードバック・不具合報告</div>
-    <label class="field-label">種類</label>
-    <div class="seg-group">
-      <div class="seg-btn active" data-type="feedback">ご意見</div>
-      <div class="seg-btn" data-type="bug">不具合</div>
-    </div>
-    <label class="field-label">タイトル</label>
-    <input class="field-input" id="fbTitle" type="text" placeholder="例：カレンダーが見れない">
-    <label class="field-label">内容</label>
-    <textarea class="field-textarea" id="fbBody" placeholder="気になったこと・困ったことを書いてね"></textarea>
-    <button class="submit-btn" onclick="sendFeedback()">メールで送信する</button>
-    <div class="feedback-note">送信ボタンを押すと、メールアプリの作成画面が開きます。内容を確認してそのまま送信できます。宛先：ryufuchu3135@outlook.jp</div>
-  </div>
-
-  <footer class="app-footer">恋愛研究所 ｜ ときねね study room ver 1.03</footer>
-</section>
-
-<!-- ============ CALENDAR ============ -->
-<section class="page" id="page-calendar">
-  <div class="card">
-    <div class="card-title"><span class="dot"></span>カレンダー</div>
-    <div class="iframe-wrap">
-      <iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=Asia%2FTokyo&showPrint=0&src=cjYxMzM0QGpocy51LXJ5dWt5dS5hYy5qcA&src=Y182YzMzOGUzNzgwODEyYTY1ZmFlZTM0YmZmNjM4NzU0NDZjZTgzMTkxNjkyMjJhY2ExZDExNzcwNmIyN2NhOWMyQGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20&src=Y19jbGFzc3Jvb20wNmMxZTQ4NkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20wZDFlOWI3MEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20wZTQxY2YyMkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20wZmQ0MjdjNkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20xMGVlZTYxZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20xNWZhMDQ1ZEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20xNzNmYmI3OEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20xZWFiNTk4ZUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20yNTVkY2VmYUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20yN2Q2MTI1Y0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20yZjM5YTNiMEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20zMGI0NjRlMUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb200MGQ3NzBkM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb200NGQ0YTFhMUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb200YTA4MWNmY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb200Y2M3YTJkZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb201NjUxMmYwYUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb201NmFjYmI4N0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb201ZWI2YWFmOUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb201ZjdlOGI5N0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb202Mzk4ZTcyY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb202YTE2NGU3MUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb203ZGZmOWM2NEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb204OWI4OTE1OEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb204ZDFhYzcyZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb204ZTA0NzUzNEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb204ZjNiNTJmMkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb204ZmU1MTlkZmQ1YzRAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=Y19jbGFzc3Jvb205YTNhYzhkOUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21hNTZmNGMzN0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21hNjhhMzViNUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21hOTcyYzNmZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21hYTQ2NTRiYkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21iYWFkNjcxMUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21iYzFjZjIwMUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21jMWI1NjY5YkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21jMWVmMTljM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21lNzIyNTUxM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21lZmY5NzIzMkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21mYzNkOTRiMUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=amEuamFwYW5lc2UjaG9saWRheUBncm91cC52LmNhbGVuZGFyLmdvb2dsZS5jb20&color=%23039be5&color=%23f4511e&color=%23202124&color=%23007b83&color=%231967d2&color=%23c26401&color=%23b80672&color=%23202124&color=%23c26401&color=%23c26401&color=%23b80672&color=%231967d2&color=%237627bb&color=%23202124&color=%23b80672&color=%23c26401&color=%231967d2&color=%23202124&color=%231967d2&color=%23c26401&color=%231967d2&color=%231967d2&color=%23137333&color=%23c26401&color=%23202124&color=%23174ea6&color=%23174ea6&color=%231967d2&color=%23137333&color=%23c26401&color=%23137333&color=%23007b83&color=%231967d2&color=%231967d2&color=%23202124&color=%23174ea6&color=%231967d2&color=%231967d2&color=%231967d2&color=%231967d2&color=%23137333&color=%231967d2&color=%230b8043" width="100%" height="500" frameborder="0" scrolling="no"></iframe>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 教科書・答え ============ -->
-<section class="page" id="page-book">
-  <div class="card">
-    <div class="card-title"><span class="dot"></span>教科書・答え</div>
-    <div class="link-row" style="margin-bottom:10px;">
-      <div class="link-left">
-        <div class="link-icon" style="background:rgba(154,122,240,0.18);">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M4 5c2-1.5 5-1.5 7 0v14c-2-1.5-5-1.5-7 0V5Z" stroke="#9a7af0" stroke-width="1.6"/><path d="M20 5c-2-1.5-5-1.5-7 0v14c2-1.5 5-1.5 7 0V5Z" stroke="#9a7af0" stroke-width="1.6"/></svg>
-        </div>
-        <div>
-          <div class="link-text-title">国語ワーク 解答</div>
-          <div class="link-text-sub">sing-book ビューア</div>
-        </div>
-      </div>
-    </div>
-    <button class="open-btn" onclick="window.open('https://sing-book.sing.jp/viewer/2997fe33c2c641a498d4817731710a90?index=%2Fviewer%2F2997fe33c2c641a498d4817731710a90&print=0&outline=0&page=1','_blank')">
-      新しいタブで開く ›
-    </button>
-  </div>
-
-  <div class="card">
-    <div class="card-title"><span class="dot"></span>教科書 PDF</div>
-    <div class="link-row" style="margin-bottom:10px;">
-      <div class="link-left">
-        <div class="link-icon" style="background:rgba(255,111,176,0.18);">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke="#ff6fb0" stroke-width="1.6"/><path d="M14 3v6h6" stroke="#ff6fb0" stroke-width="1.6"/></svg>
-        </div>
-        <div>
-          <div class="link-text-title">教科書 データ</div>
-          <div class="link-text-sub">Google Drive</div>
-        </div>
-      </div>
-    </div>
-    <button class="open-btn" onclick="window.open('https://drive.google.com/file/d/1x7jXqvPXzxo6Q-OzPcwo8e9U8sYxyP0Y/view?usp=sharing','_blank')">
-      新しいタブで開く ›
-    </button>
   </div>
 </section>
 
-<!-- ============ 時間割 ============ -->
-<section class="page" id="page-time">
-  <div class="card">
-    <div class="card-title"><span class="dot"></span>時間割</div>
-    <div class="iframe-wrap">
-      <iframe src="https://drive.google.com/file/d/1CsahAmXmoJViIj8Q3SR3-di6b_LiCW02/preview" height="480" allow="autoplay"></iframe>
+<!-- CALENDAR -->
+<section id="page-calendar" class="page">
+  <div class="phdr">
+    <svg width="52" height="52" viewBox="0 0 52 52" fill="none" style="display:block;margin:0 auto 12px;position:relative;z-index:1">
+      <rect x="6" y="8" width="40" height="38" rx="7" fill="white" opacity=".72"/>
+      <rect x="6" y="8" width="40" height="15" rx="7" fill="#FF8FAB" opacity=".55"/>
+      <rect x="6" y="16" width="40" height="7" fill="#FF8FAB" opacity=".55"/>
+      <rect x="15" y="4" width="5" height="9" rx="2.5" fill="#C77DFF"/>
+      <rect x="32" y="4" width="5" height="9" rx="2.5" fill="#C77DFF"/>
+      <rect x="13" y="30" width="6" height="5" rx="1.5" fill="#FF8FAB" opacity=".65"/>
+      <rect x="23" y="30" width="6" height="5" rx="1.5" fill="#C77DFF" opacity=".65"/>
+      <rect x="33" y="30" width="6" height="5" rx="1.5" fill="#FF8FAB" opacity=".65"/>
+    </svg>
+    <h2 class="pttl">カレンダー</h2>
+    <p class="psub">スケジュールを確認しよう</p>
+  </div>
+  <div class="calwrap">
+    <div class="calbox">
+      <iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=Asia%2FTokyo&showPrint=0&src=cjYxMzM0QGpocy51LXJ5dWt5dS5hYy5qcA&src=Y182YzMzOGUzNzgwODEyYTY1ZmFlZTM0YmZmNjM4NzU0NDZjZTgzMTkxNjkyMjJhY2ExZDExNzcwNmIyN2NhOWMyQGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20&src=Y19jbGFzc3Jvb20wNmMxZTQ4NkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20wZDFlOWI3MEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20wZTQxY2YyMkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20wZmQ0MjdjNkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20xMGVlZTYxZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20xNWZhMDQ1ZEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20xNzNmYmI3OEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20xZWFiNTk4ZUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20yNTVkY2VmYUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20yN2Q2MTI1Y0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20yZjM5YTNiMEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb20zMGI0NjRlMUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb200MGQ3NzBkM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb200NGQ0YTFhMUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb200YTA4MWNmY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb200Y2M3YTJkZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb201NjUxMmYwYUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb201NmFjYmI4N0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb201ZWI2YWFmOUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb201ZjdlOGI5N0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb202Mzk4ZTcyY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb202YTE2NGU3MUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb203ZGZmOWM2NEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb204OWI4OTE1OEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb204ZDFhYzcyZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb204ZTA0NzUzNEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb204ZjNiNTJmMkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb204ZmU1MTlkZmQ1YzRAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&src=Y19jbGFzc3Jvb205YTNhYzhkOUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21hNTZmNGMzN0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21hNjhhMzViNUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21hOTcyYzNmZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21hYTQ2NTRiYkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21iYWFkNjcxMUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21iYzFjZjIwMUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21jMWI1NjY5YkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21jMWVmMTljM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21lNzIyNTUxM0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21lZmY5NzIzMkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=Y19jbGFzc3Jvb21mYzNkOTRiMUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=amEuamFwYW5lc2UjaG9saWRheUBncm91cC52LmNhbGVuZGFyLmdvb2dsZS5jb20&color=%23039be5&color=%23f4511e&color=%23202124&color=%23007b83&color=%231967d2&color=%23c26401&color=%23b80672&color=%23202124&color=%23c26401&color=%23c26401&color=%23b80672&color=%231967d2&color=%237627bb&color=%23202124&color=%23b80672&color=%23c26401&color=%231967d2&color=%23202124&color=%231967d2&color=%23c26401&color=%231967d2&color=%231967d2&color=%23137333&color=%23c26401&color=%23202124&color=%23174ea6&color=%23174ea6&color=%231967d2&color=%23137333&color=%23c26401&color=%23137333&color=%23007b83&color=%231967d2&color=%231967d2&color=%23202124&color=%23174ea6&color=%231967d2&color=%231967d2&color=%231967d2&color=%231967d2&color=%23137333&color=%231967d2&color=%230b8043" frameborder="0" scrolling="no"></iframe>
     </div>
-    <button class="open-btn" onclick="window.open('https://drive.google.com/file/d/1CsahAmXmoJViIj8Q3SR3-di6b_LiCW02/view?usp=sharing','_blank')">
-      新しいタブで開く ›
-    </button>
   </div>
 </section>
 
-<!-- ===== BOTTOM NAV ===== -->
-<nav class="bottom-nav">
-  <div class="nav-item active" data-page="home" onclick="goPage('home')">
-    <svg viewBox="0 0 24 24"><path d="M4 11.5 12 4l8 7.5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10v9a1 1 0 0 0 1 1h3v-6h4v6h3a1 1 0 0 0 1-1v-9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <div class="nav-label">ホーム</div>
+<!-- TEXTBOOK -->
+<section id="page-textbook" class="page">
+  <div class="phdr">
+    <svg width="52" height="52" viewBox="0 0 52 52" fill="none" style="display:block;margin:0 auto 12px;position:relative;z-index:1">
+      <rect x="7" y="5" width="28" height="40" rx="4" fill="white" opacity=".75"/>
+      <rect x="9" y="10" width="20" height="3" rx="1.5" fill="#FF8FAB" opacity=".7"/>
+      <rect x="9" y="16" width="24" height="2" rx="1" fill="#D5BDE6" opacity=".7"/>
+      <rect x="9" y="21" width="20" height="2" rx="1" fill="#D5BDE6" opacity=".7"/>
+      <path d="M35 5 L43 10 L43 45 L35 45Z" fill="white" opacity=".5"/>
+      <circle cx="38" cy="33" r="7" fill="#C77DFF" opacity=".85"/>
+      <path d="M35 33 L37.5 35.5 L41.5 30" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <h2 class="pttl">教科書・答え</h2>
+    <p class="psub">いつでも確認できるよ</p>
   </div>
-  <div class="nav-item" data-page="calendar" onclick="goPage('calendar')">
-    <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="4" stroke-width="1.8"/><path d="M3 9h18" stroke-width="1.8"/><path d="M8 3v4M16 3v4" stroke-width="1.8" stroke-linecap="round"/></svg>
-    <div class="nav-label">カレンダー</div>
+  <div class="tbwrap">
+    <div class="tbhero">
+      <div class="tbhttl">教科書 &amp; 答え</div>
+      <div class="tbhdesc">Googleドライブに保存してあるよ。<br>教科書も答えも入ってるから確認してね！<br>内容は随時更新されます。</div>
+      <a href="https://drive.google.com/file/d/1x7jXqvPXzxo6Q-OzPcwo8e9U8sYxyP0Y/view?usp=sharing" target="_blank" class="tbhbtn">Driveで開く</a>
+    </div>
+    <div class="card">
+      <div class="ctitle">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2" y="1" width="9" height="13" rx="2" stroke="#FF8FAB" stroke-width="1.4"/><path d="M11 2 L14 4 L14 14 L11 14Z" stroke="#FF8FAB" stroke-width="1.4" stroke-linecap="round"/><path d="M4.5 5.5h5M4.5 8h4" stroke="#FF8FAB" stroke-width="1.4" stroke-linecap="round"/></svg>
+        国語ワーク 回答
+      </div>
+      <p style="font-size:13px;color:var(--textl);line-height:1.65">国語のワークの回答をチェックできるよ。<br>答え合わせに活用してね！</p>
+      <a href="https://sing-book.sing.jp/viewer/2997fe33c2c641a498d4817731710a90?index=%2Fviewer%2F2997fe33c2c641a498d4817731710a90&print=0&outline=0&page=1" target="_blank" class="kgbtn">国語ワーク回答を開く</a>
+    </div>
   </div>
-  <div class="nav-item" data-page="book" onclick="goPage('book')">
-    <svg viewBox="0 0 24 24"><path d="M4 5c2-1.5 5-1.5 7 0v14c-2-1.5-5-1.5-7 0V5Z" stroke-width="1.8"/><path d="M20 5c-2-1.5-5-1.5-7 0v14c2-1.5 5-1.5 7 0V5Z" stroke-width="1.8"/></svg>
-    <div class="nav-label">教科書・答え</div>
+</section>
+
+<!-- TIMETABLE -->
+<section id="page-timetable" class="page">
+  <div class="phdr">
+    <svg width="52" height="52" viewBox="0 0 52 52" fill="none" style="display:block;margin:0 auto 12px;position:relative;z-index:1">
+      <rect x="4" y="4" width="44" height="44" rx="9" fill="white" opacity=".7"/>
+      <rect x="4" y="4" width="44" height="14" rx="9" fill="#C77DFF" opacity=".5"/>
+      <rect x="4" y="12" width="44" height="6" fill="#C77DFF" opacity=".5"/>
+      <rect x="10" y="24" width="9" height="6" rx="2" fill="#FF8FAB" opacity=".6"/>
+      <rect x="21.5" y="24" width="9" height="6" rx="2" fill="#C77DFF" opacity=".6"/>
+      <rect x="33" y="24" width="9" height="6" rx="2" fill="#FF8FAB" opacity=".6"/>
+      <rect x="10" y="33" width="9" height="6" rx="2" fill="#C77DFF" opacity=".5"/>
+      <rect x="21.5" y="33" width="9" height="6" rx="2" fill="#FF8FAB" opacity=".5"/>
+      <rect x="33" y="33" width="9" height="6" rx="2" fill="#C77DFF" opacity=".5"/>
+    </svg>
+    <h2 class="pttl">時間割</h2>
+    <p class="psub">今日の授業をチェックしよう</p>
   </div>
-  <div class="nav-item" data-page="time" onclick="goPage('time')">
-    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="3" stroke-width="1.8"/><path d="M3 9.5h18" stroke-width="1.8"/></svg>
-    <div class="nav-label">時間割</div>
+  <div class="ttwrap">
+    <div class="ttbox">
+      <iframe src="https://drive.google.com/file/d/1CsahAmXmoJViIj8Q3SR3-di6b_LiCW02/preview" allow="autoplay"></iframe>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bnav">
+  <div class="nitem on" onclick="sPage('home',this)">
+    <svg class="nico" viewBox="0 0 24 24" fill="none">
+      <path d="M3 10.5L12 3l9 7.5V21a1 1 0 01-1 1H4a1 1 0 01-1-1V10.5z" stroke="#FF8FAB" stroke-width="1.8" stroke-linejoin="round" fill="rgba(255,143,171,.18)"/>
+      <path d="M9 22V13h6v9" stroke="#FF8FAB" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+    <span class="nlbl">ホーム</span>
+    <div class="ndot"></div>
+  </div>
+  <div class="nitem" onclick="sPage('calendar',this)">
+    <svg class="nico" viewBox="0 0 24 24" fill="none">
+      <rect x="3" y="4" width="18" height="18" rx="4" stroke="#9B8DAA" stroke-width="1.8"/>
+      <path d="M3 9h18" stroke="#9B8DAA" stroke-width="1.8"/>
+      <path d="M8 2v4M16 2v4" stroke="#9B8DAA" stroke-width="1.8" stroke-linecap="round"/>
+      <circle cx="8.5" cy="14.5" r="1.5" fill="#9B8DAA"/>
+      <circle cx="15.5" cy="14.5" r="1.5" fill="#9B8DAA"/>
+    </svg>
+    <span class="nlbl">カレンダー</span>
+    <div class="ndot"></div>
+  </div>
+  <div class="nitem" onclick="sPage('textbook',this)">
+    <svg class="nico" viewBox="0 0 24 24" fill="none">
+      <path d="M4 19.5A2.5 2.5 0 016.5 17H20" stroke="#9B8DAA" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" stroke="#9B8DAA" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M9 7h7M9 11h5" stroke="#9B8DAA" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <span class="nlbl">教科書・答え</span>
+    <div class="ndot"></div>
+  </div>
+  <div class="nitem" onclick="sPage('timetable',this)">
+    <svg class="nico" viewBox="0 0 24 24" fill="none">
+      <rect x="3" y="3" width="18" height="18" rx="3" stroke="#9B8DAA" stroke-width="1.8"/>
+      <path d="M3 8h18M8 3v18" stroke="#9B8DAA" stroke-width="1.8"/>
+      <rect x="10" y="10" width="4" height="3" rx=".8" fill="#9B8DAA" opacity=".5"/>
+      <rect x="15" y="10" width="4" height="3" rx=".8" fill="#9B8DAA" opacity=".5"/>
+      <rect x="10" y="15" width="4" height="3" rx=".8" fill="#9B8DAA" opacity=".5"/>
+      <rect x="15" y="15" width="4" height="3" rx=".8" fill="#9B8DAA" opacity=".5"/>
+    </svg>
+    <span class="nlbl">時間割</span>
+    <div class="ndot"></div>
   </div>
 </nav>
 
 <script>
-// loader
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    document.getElementById('loader').classList.add('hide');
-  }, 1300);
+window.addEventListener('load',()=>{
+  setTimeout(()=>document.getElementById('ls').classList.add('hide'),2800);
 });
 
-// page nav
-function goPage(name){
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.querySelector('.nav-item[data-page="' + name + '"]').classList.add('active');
-  window.scrollTo({top:0, behavior:'smooth'});
+function sPage(name,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nitem').forEach(n=>n.classList.remove('on'));
+  document.getElementById('page-'+name).classList.add('active');
+  el.classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// segmented control
-document.querySelectorAll('.seg-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-  });
-});
-
-// feedback -> mailto
-function sendFeedback(){
-  const type = document.querySelector('.seg-btn.active').dataset.type === 'bug' ? '不具合報告' : 'ご意見・フィードバック';
-  const title = document.getElementById('fbTitle').value.trim();
-  const body = document.getElementById('fbBody').value.trim();
-  const subject = encodeURIComponent('【ときねねstudy room】' + type + (title ? '：' + title : ''));
-  const mailBody = encodeURIComponent(
-    'ときねね study room へのフィードバックです。\n\n' +
-    '種類：' + type + '\n' +
-    'タイトル：' + (title || '（未入力）') + '\n\n' +
-    '内容：\n' + (body || '（未入力）') + '\n\n' +
-    '---\n送信元：ときねね study room ver1.03'
-  );
-  window.location.href = 'mailto:ryufuchu3135@outlook.jp?subject=' + subject + '&body=' + mailBody;
+let ftype='フィードバック';
+function sType(el,t){
+  ftype=t;
+  document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+}
+function sendFB(){
+  const txt=document.getElementById('ft').value.trim();
+  if(!txt){alert('内容を入力してください。');return;}
+  const d=new Date().toLocaleString('ja-JP',{timeZone:'Asia/Tokyo'});
+  const sub=encodeURIComponent('【ときねねstudyroom】'+ftype);
+  const body=encodeURIComponent('【種別】'+ftype+'\n━━━━━━━━━━━━━━\n【内容】\n'+txt+'\n━━━━━━━━━━━━━━\n送信元: ときねね study room ver 1.03\n日時: '+d);
+  window.location.href='mailto:ryufuchu3135@outlook.jp?subject='+sub+'&body='+body;
 }
 
-// Pomodoro timer
-let totalSeconds = 25*60;
-let remaining = totalSeconds;
-let timerInterval = null;
-let isBreak = false;
-const circle = document.getElementById('timerCircle');
-const circumference = 2 * Math.PI * 68;
-circle.setAttribute('stroke-dasharray', circumference);
+const CIRC=2*Math.PI*72;
+const ST=25*60,BT=5*60;
+let tl=ST,isS=true,sc=1,run=false,iv=null;
+document.getElementById('tp').style.strokeDasharray=CIRC;
+document.getElementById('tp').style.strokeDashoffset=0;
 
-function renderTimer(){
-  const m = Math.floor(remaining/60).toString().padStart(2,'0');
-  const s = (remaining%60).toString().padStart(2,'0');
-  document.getElementById('timerDisplay').textContent = m+':'+s;
-  const ratio = remaining/totalSeconds;
-  circle.setAttribute('stroke-dashoffset', circumference * (1-ratio));
-  document.getElementById('timerMode').textContent = isBreak ? 'きゅうけい タイム' : 'しゅうちゅう タイム';
+function uDisp(){
+  const m=Math.floor(tl/60),s=tl%60;
+  document.getElementById('td').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  document.getElementById('tp').style.strokeDashoffset=CIRC*(1-tl/(isS?ST:BT));
+  document.getElementById('tm').textContent=isS?'STUDY':'BREAK';
+  document.getElementById('ts').textContent='セッション '+sc+' / 4';
 }
-renderTimer();
-
-document.getElementById('timerStart').addEventListener('click', function(){
-  if(timerInterval){
-    clearInterval(timerInterval);
-    timerInterval = null;
-    this.textContent = 'スタート';
-    return;
+function tTimer(){
+  if(run){clearInterval(iv);run=false;document.getElementById('tsb').textContent='スタート';}
+  else{
+    run=true;document.getElementById('tsb').textContent='ストップ';
+    iv=setInterval(()=>{
+      tl--;
+      if(tl<0){if(isS){isS=false;tl=BT;}else{isS=true;tl=ST;sc=Math.min(sc+1,4);}}
+      uDisp();
+    },1000);
   }
-  this.textContent = 'ストップ';
-  timerInterval = setInterval(() => {
-    remaining--;
-    if(remaining <= 0){
-      isBreak = !isBreak;
-      totalSeconds = isBreak ? 5*60 : 25*60;
-      remaining = totalSeconds;
-    }
-    renderTimer();
-  }, 1000);
-});
-
-document.getElementById('timerReset').addEventListener('click', () => {
-  clearInterval(timerInterval);
-  timerInterval = null;
-  document.getElementById('timerStart').textContent = 'スタート';
-  isBreak = false;
-  totalSeconds = 25*60;
-  remaining = totalSeconds;
-  renderTimer();
-});
+}
+function rTimer(){
+  clearInterval(iv);run=false;isS=true;tl=ST;sc=1;
+  document.getElementById('tsb').textContent='スタート';
+  uDisp();
+}
+uDisp();
 </script>
 </body>
 </html>

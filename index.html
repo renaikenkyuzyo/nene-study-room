@@ -169,7 +169,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
       <path d="M50 57 C50 57 44 52 44 48 C44 45.7 45.8 44 48 44 C49.1 44 50 44.6 50 44.6 C50 44.6 50.9 44 52 44 C54.2 44 56 45.7 56 48 C56 52 50 57 50 57Z" fill="#FF8FAB" opacity=".6"/>
     </svg>
     <h1 class="site-ttl">ときねね study room</h1>
-    <p class="site-sub">勉強をもっと楽しく、一緒に頑張ろう</p>
+    <p class="site-sub">Powerd by 恋愛研究所</p>
   </div>
 
   <div class="cw">
@@ -251,7 +251,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
         <div class="vitem"><div class="vdot"></div><span>カレンダー・時間割機能を実装</span></div>
         <div class="vitem"><div class="vdot"></div><span>教科書・回答リンクを整備</span></div>
         <div class="vitem"><div class="vdot"></div><span>フィードバック機能を搭載</span></div>
-        <div class="vitem"><div class="vdot"></div><span>iOS 26風ガラスナビゲーション採用</span></div>
+        <div class="vitem"><div class="vdot"></div><span>ガラスナビゲーション採用</span></div>
       </div>
       <div class="vfoot">運営：恋愛研究所</div>
     </div>
@@ -423,8 +423,8 @@ function sendFB(){
   if(!txt){alert('内容を入力してください。');return;}
   const d=new Date().toLocaleString('ja-JP',{timeZone:'Asia/Tokyo'});
   const sub=encodeURIComponent('【ときねねstudyroom】'+ftype);
-  const body=encodeURIComponent('【種別】'+ftype+'\n━━━━━━━━━━━━━━\n【内容】\n'+txt+'\n━━━━━━━━━━━━━━\n送信元: ときねね study room ver 1.03\n日時: '+d);
-  window.location.href='mailto:ryufuchu3135@outlook.jp?subject='+sub+'&body='+body;
+  const body=encodeURIComponent('そのまま送信してください。【種別】'+ftype+'\n━━━━━━━━━━━━━━\n【内容】\n'+txt+'\n━━━━━━━━━━━━━━\n送信元: ときねね study room ver 1.03\n日時: '+d);
+  window.location.href='mailto:renaikenkyuzyo.info@outlook.jp?subject='+sub+'&body='+body;
 }
 
 const CIRC=2*Math.PI*72;

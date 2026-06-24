@@ -214,7 +214,7 @@ body{font-family:'M PLUS Rounded 1c',sans-serif;background:var(--bg);color:var(-
     <div class="card">
       <div class="ctitle">
         <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="9.5" r="5.5" stroke="#C77DFF" stroke-width="1.4"/><path d="M8 7v2.5l1.8 1.1" stroke="#C77DFF" stroke-width="1.4" stroke-linecap="round"/><path d="M5.5 1.5h5M8 1.5v1.5" stroke="#C77DFF" stroke-width="1.4" stroke-linecap="round"/></svg>
-        ポモドーロタイマー
+        studyタイマー
       </div>
       <div class="tdisp">
         <div class="tcirc">
@@ -423,8 +423,8 @@ function sendFB(){
   if(!txt){alert('内容を入力してください。');return;}
   const d=new Date().toLocaleString('ja-JP',{timeZone:'Asia/Tokyo'});
   const sub=encodeURIComponent('【ときねねstudyroom】'+ftype);
-  const body=encodeURIComponent('そのまま送信してください。【種別】'+ftype+'\n━━━━━━━━━━━━━━\n【内容】\n'+txt+'\n━━━━━━━━━━━━━━\n送信元: ときねね study room ver 1.03\n日時: '+d);
-  window.location.href='mailto:renaikenkyuzyo.info@outlook.jp?subject='+sub+'&body='+body;
+  const body=encodeURIComponent('このメールをそのまま送信してください。【種別】'+ftype+'\n━━━━━━━━━━━━━━\n【内容】\n'+txt+'\n━━━━━━━━━━━━━━\n送信元: ときねね study room ver 1.03\n日時: '+d);
+  window.location.href='mailto:renaikenkyuzyo@hotmail.com?subject='+sub+'&body='+body;
 }
 
 const CIRC=2*Math.PI*72;
